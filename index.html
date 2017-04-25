@@ -15,7 +15,8 @@
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="plugins/pickadate.js-master/lib/themes/default.css">
-                <link rel="stylesheet" href="plugins/pickadate.js-master/lib/themes/default.date.css">
+        <link rel="stylesheet" href="plugins/pickadate.js-master/lib/themes/default.date.css">
+        <link rel="stylesheet" href="plugins/pickadate.js-master/lib/themes/default.time.css">
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     </head>
     <body>
@@ -46,6 +47,24 @@
                   <div>
                     <label for="to-date">To</label>
                     <input id="to-date" class="datepicker" type="text" placeholder="To date..." readonly="" aria-haspopup="true" aria-expanded="false" aria-readonly="false">
+                  </div>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <section class="feature-section">
+            <h1>Choose time interval</h1>
+            <div class="feature-box">
+              <form>
+                <div class="flex-row-space-between form-section">
+                  <div>
+                    <label for="from-date">From</label>
+                    <input id="from-date" class="timepicker" type="text" placeholder="From time..." readonly="" aria-haspopup="true" aria-expanded="false" aria-readonly="false">
+                  </div>
+                  <div>
+                    <label for="to-date">To</label>
+                    <input id="to-date" class="timepicker" type="text" placeholder="To time..." readonly="" aria-haspopup="true" aria-expanded="false" aria-readonly="false">
                   </div>
                 </div>
               </form>
@@ -159,5 +178,6 @@
         <script src="js/main.js"></script>
         <script src="plugins/pickadate.js-master/lib/picker.js"></script>
         <script src="plugins/pickadate.js-master/lib/picker.date.js"></script>
+        <script src="plugins/pickadate.js-master/lib/picker.time.js"></script>
     </body>
 </html>

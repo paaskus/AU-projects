@@ -4,6 +4,10 @@ $(document).ready(function() {
         max: new Date()
     });
 
+    $('.timepicker').pickatime({
+        format: 'HH:i'
+    });
+
     $('.filter-option').click(function() {
         $(this).toggleClass('selected');
     });
