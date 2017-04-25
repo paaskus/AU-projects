@@ -272,6 +272,7 @@ input[type="submit"]:hover,
         -ms-user-select: none;
             user-select: none;
   cursor: pointer;
+  transition: all 0.5s ease;
 }
 
 .filter-option.selected {
@@ -315,6 +316,7 @@ input[type="submit"]:hover,
   color: #FFF;
   width: auto;
   box-sizing: border-box;
+  transition: all 0.5s ease;
 }
 
 
