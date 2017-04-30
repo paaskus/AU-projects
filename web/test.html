@@ -40,8 +40,8 @@
             <h1>Choose date range</h1>
             <div class="feature-box">
               <form>
-                <div class="form-section range-selection">
-                  <div class="from-range">
+                <div class="flex-row-space-between form-section">
+                  <div>
                     <label for="from-date">From</label>
                     <input id="from-date" class="datepicker" type="text" placeholder="From date..." readonly="" aria-haspopup="true" aria-expanded="false" aria-readonly="false">
                   </div>
@@ -58,8 +58,8 @@
             <h1>Filter by time interval</h1>
             <div class="feature-box">
               <form>
-                <div class="form-section range-selection">
-                  <div class="from-range">
+                <div class="flex-row-space-between form-section">
+                  <div>
                     <label for="from-date">From</label>
                     <input id="from-date" class="timepicker" type="text" placeholder="From time..." readonly="" aria-haspopup="true" aria-expanded="false" aria-readonly="false">
                   </div>
@@ -150,9 +150,9 @@
               <span class="filter-option">Windows Phone</span>
             </div>
           </section>
-          <section class="controller-section flexy" style="justify-content: center;">
+          <section class="controller-section">
             <button id="result-button" class="big-button">Generate result</button>
-            <a class="big-button" style="background-color: #BBB; color: #555" href="https://www.ibm.com/support/knowledgecenter/en/SVU13_7.2.1/com.ibm.ismsaas.doc/reference/AssetsImportCompleteSample.csv?view=kc">Export raw data</a>
+            <a class="big-button" style="margin-left: 20px; background-color: #BBB; color: #555" href="https://www.ibm.com/support/knowledgecenter/en/SVU13_7.2.1/com.ibm.ismsaas.doc/reference/AssetsImportCompleteSample.csv?view=kc">Export raw data</a>
           </section>
         </main>
 
@@ -160,43 +160,50 @@
           <h1 style="color: #fff; font-weight: normal;text-align: center; font-size: 50px; margin: 0; margin-bottom: 20px;">Result</h1>
           <section class="feature-section result-section">
             <h1>Platform</h1>
-            <div id="platform" class="feature-box flexy">
-            </div>
-          </section>
-
-          <section class="feature-section result-section">
-            <h1>Device</h1>
-            <div id="device" class="feature-box flexy">
-            </div>
-          </section>
-
-          <section class="feature-section result-section">
-            <h1>Operating system</h1>
-            <div id="operating-system" class="feature-box flexy">
-            </div>
-          </section>
-
-          <section class="feature-section result-section">
-            <h1>Web browser</h1>
-            <div id="web-browser" class="feature-box flexy">
-            </div>
-          </section>
-
-          <section class="feature-section result-section">
-            <h1>Category</h1>
-            <div id="category" class="feature-box flexy">
-            </div>
-          </section>
-
-          <section class="feature-section result-section">
-            <h1>Section</h1>
             <div class="feature-box">
+              <svg id="platform" width="960" height="500"></svg>
             </div>
           </section>
 
           <section class="feature-section result-section">
-            <h1>Article</h1>
+            <h1>Primary device</h1>
             <div class="feature-box">
+              <img src="img/histogram.png" />
+            </div>
+          </section>
+
+          <section class="feature-section result-section">
+            <h1>Primary operating system</h1>
+            <div class="feature-box">
+              <img src="img/histogram2.png" />
+            </div>
+          </section>
+
+          <section class="feature-section result-section">
+            <h1>Primary browser</h1>
+            <div class="feature-box">
+              <img src="img/histogram.png" />
+            </div>
+          </section>
+
+          <section class="feature-section result-section">
+            <h1>Primary category</h1>
+            <div class="feature-box">
+              <img src="img/histogram2.png" />
+            </div>
+          </section>
+
+          <section class="feature-section result-section">
+            <h1>Primary section</h1>
+            <div class="feature-box">
+              <img src="img/histogram.png" />
+            </div>
+          </section>
+
+          <section class="feature-section result-section">
+            <h1>Primary article</h1>
+            <div class="feature-box">
+              <img src="img/histogram2.png" />
             </div>
           </section>
 
