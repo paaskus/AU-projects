@@ -319,6 +319,20 @@ input[type="submit"]:hover,
   transition: all 0.5s ease;
 }
 
+/* D3 */
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis--x path {
+  display: none;
+}
+
 
 /* ==========================================================================
    Helper classes
