@@ -1,8 +1,6 @@
-import pandas as pd
-import json
-
-
 def filter_data(data, filter_options_string):
+    import json
+
     filter_options = json.loads(filter_options_string)
     filters = filter_options['filters']
     result = data
@@ -12,11 +10,13 @@ def filter_data(data, filter_options_string):
         result = result[result[filter_name].isin(selected)]
     return result
 
-def simple_analysis(jp_data, attribute_name):    
+def simple_analysis(jp_data, attribute_name):
+    import pandas as pd
+    import json
     # Select observations where SSO-ID is set
     only_sso_id = jp_data.loc[(jp_data['sso'] != 'NOTSET') & (pd.notnull(jp_data['sso']))]
     
-    sso_id_count = pd.DataFrame({'No result': 1}, index = ['No result'])
+    sso_id_count = None
     primary_counts = sso_id_count
     
     if not only_sso_id.empty:
@@ -33,8 +33,8 @@ def simple_analysis(jp_data, attribute_name):
 
     # Results as JSON
     total_count_json = json.loads(total_count.to_json())
-    sso_id_count_json = json.loads(sso_id_count.to_json())
-    primary_counts_json = json.loads(primary_counts.to_json())
+    sso_id_count_json = {'No result': 0} if sso_id_count == None else json.loads(sso_id_count.to_json()) 
+    primary_counts_json = {'No result': 0} if sso_id_count == None else json.loads(primary_counts.to_json())
 
     # Merge the three separate JSON objects to a combined JSON object
     combined_result = {'total': total_count_json,
@@ -44,6 +44,8 @@ def simple_analysis(jp_data, attribute_name):
     return combined_result
 
 def crunch_the_data(path_to_data, filter_options):
+    import pandas as pd
+    import json
     data = pd.read_csv(path_to_data,
                    delimiter = '\t',
                    error_bad_lines = False,
@@ -62,7 +64,7 @@ def crunch_the_data(path_to_data, filter_options):
     return json.dumps(result)
     
 def test():
-    filter_options = '{"filters":[]}'
+    filter_options = '{"filters":[{"filterName":"Platform","selected":["Big screen"]}]}'
     result = crunch_the_data('~/JPdatatool/JPdata/jyllandsposten_20170402-20170402_18014v2.tsv', filter_options)
     print(result)
     return result

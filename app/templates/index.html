@@ -1,0 +1,216 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>JPdatatool | Jyllands-Posten</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <!-- Place favicon.ico in the root directory -->
+
+        <link rel="icon" href="favicon.ico" sizes="16x16 32x32 64x64 128x128" type="image/png">
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="plugins/pickadate.js-master/lib/themes/default.css">
+        <link rel="stylesheet" href="plugins/pickadate.js-master/lib/themes/default.date.css">
+        <link rel="stylesheet" href="plugins/pickadate.js-master/lib/themes/default.time.css">
+        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+        <script src="js/vendor/d3.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <header class="nav-bar">
+          <svg id="logo" xmlns="http://www.w3.org/2000/svg" id="Layer_1" viewBox="0 0 235 45"><path d="M63.4 26.2c0-.6.1-1.5.4-2.3.2-.7.8-1 1.5-1h1.2c.9 0 1.3.5 1.1 1.4-.2.6-.2 1.1-.2 1.5 0 2.3 1.2 4.5 4.3 4.5 3.2 0 4.9-2.4 4.9-6.4V13.1c0-.8.5-1.3 1.3-1.3h1.5c.8 0 1.3.5 1.3 1.3v10.7c0 6.6-3.3 10-8.9 10-6.2.1-8.4-4-8.4-7.6zm38.4-7.3c0 3.8-2.5 6.9-6.9 6.9h-5.1v6.4c0 .8-.5 1.3-1.3 1.3H87c-.8 0-1.3-.5-1.3-1.3V13.1c0-.8.5-1.3 1.3-1.3h7.9c4.4 0 6.9 3.3 6.9 7.1zm-4.2 0c0-2.1-1.3-3.6-3.4-3.6h-4.5v7.2h4.5c2.1 0 3.4-1.5 3.4-3.6zm6 6.9c.8-4.5 4.5-8 9.2-8 2.9 0 5.1 1.4 5.9 4.1l1.8-10.2c.1-.4.3-.5.6-.5h.5c.3 0 .5.2.4.5L118.3 33c-.1.4-.3.5-.6.5h-.5c-.3 0-.5-.2-.4-.5l.6-3.2c-1.7 2.7-4.4 4.1-7.3 4.1-4.9 0-7.3-3.6-6.5-8.1zm14.5 0c.7-3.9-1.6-6.6-5.4-6.6-3.9 0-6.9 2.9-7.5 6.6-.6 3.7 1.2 6.7 5.2 6.7 3.7 0 7-2.7 7.7-6.7zm5.5 0c.8-4.4 4.3-8 9.2-8 3.1 0 5.1 1.5 5.9 4.1l.6-3.2c.1-.4.3-.5.6-.5h.6c.3 0 .5.2.4.5L138.3 33c0 .4-.2.5-.6.5h-.6c-.3 0-.5-.2-.4-.5l.6-3.2c-1.7 2.7-4.4 4.1-7.3 4.1-4.7 0-7.2-3.6-6.4-8.1zm14.5 0c.7-3.7-1.4-6.6-5.4-6.6s-6.9 3-7.5 6.6c-.6 3.7 1.2 6.7 5.2 6.7 3.8 0 7-2.7 7.7-6.7zm6.9 3l1.6-9.4h-2.4c-.2 0-.3-.1-.3-.3l.1-.6c0-.2.2-.3.4-.3h2.4l1.1-4.5c.1-.3.3-.4.6-.4h.3c.3 0 .4.2.4.4l-.8 4.5h4.7c.2 0 .3.1.3.3l-.1.6c-.1.2-.2.3-.4.3h-4.7l-1.7 9.5c-.5 2.9.7 3.6 2.1 3.6 1.5 0 2.8-1 3-2.4 0-.1.1-.3.1-.6s.1-.4.4-.4h.7c.2 0 .3.1.3.3 0 .4-.1.8-.1.8-.3 2.1-2.1 3.7-4.7 3.7-2.1 0-4-1-3.3-5.1zm10.6-3c.8-4.4 4.3-8 9.2-8 3.1 0 5.1 1.5 5.9 4.1l.6-3.2c.1-.4.3-.5.6-.5h.6c.3 0 .5.2.4.5L170.3 33c0 .4-.2.5-.6.5h-.6c-.3 0-.5-.2-.4-.5l.6-3.2c-1.7 2.7-4.4 4.1-7.3 4.1-4.7 0-7.2-3.6-6.4-8.1zm14.5 0c.7-3.7-1.4-6.6-5.4-6.6s-6.9 3-7.5 6.6c-.6 3.7 1.2 6.7 5.2 6.7 3.8 0 7-2.7 7.7-6.7zm6.9 3l1.6-9.4h-2.4c-.2 0-.3-.1-.3-.3l.1-.6c0-.2.2-.3.4-.3h2.4l1.1-4.5c.1-.3.3-.4.6-.4h.3c.3 0 .4.2.4.4l-.8 4.5h4.7c.2 0 .3.1.3.3l-.1.6c-.1.2-.2.3-.4.3h-4.7l-1.7 9.5c-.5 2.9.7 3.6 2.1 3.6 1.5 0 2.8-1 3-2.4 0-.1.1-.3.1-.6s.1-.4.4-.4h.7c.2 0 .3.1.3.3 0 .4-.1.8-.1.8-.3 2.1-2.1 3.7-4.7 3.7-2.1 0-4-1-3.3-5.1zm10.6-2.9c.8-4.4 5.1-8.1 9.5-8.1 4.5 0 7.5 3.7 6.7 8.1-.8 4.4-5.1 8-9.5 8-4.5 0-7.5-3.6-6.7-8zm14.6 0c.6-3.6-1.8-6.7-5.4-6.7-3.5 0-7 3-7.7 6.7-.6 3.7 1.8 6.6 5.3 6.6 3.6 0 7.1-3 7.8-6.6zm4.3 0c.8-4.4 5.1-8.1 9.5-8.1 4.5 0 7.5 3.7 6.7 8.1-.8 4.4-5.1 8-9.5 8-4.5 0-7.5-3.6-6.7-8zm14.6 0c.6-3.6-1.8-6.7-5.4-6.7-3.5 0-7 3-7.7 6.7-.6 3.7 1.8 6.6 5.3 6.6 3.7 0 7.1-3 7.8-6.6zm4.4 7.1l3.8-21.4c.1-.4.3-.5.6-.5h.6c.3 0 .5.2.4.5L227.1 33c0 .4-.2.5-.6.5h-.6c-.3 0-.5-.1-.4-.5zM50.6 38.1c.1-.1.1-.2.1-.3L48 13.9c0-.1-.1-.2-.1-.3l-.1-.1-.1-.1-17.5-9.3c-.1 0-.2-.1-.3-.1h-.1L6.7 6.7c-.3 0-.5.2-.6.4-.1.2 0 .4.3.5l16.9 9L9 30.8c-.1.1-.1.1-.1.2v.4c0 .1.1.2.2.2l17.5 9.3c.1.1.3.1.4.1h.1L50 38.4c.1 0 .2 0 .2-.1.2-.1.3-.1.4-.2zm-1.4-1.3l-15.7-8.4 13.3-13.1 2.4 21.5zM33 27.1L30.6 5.6 46.3 14 33 27.1zm-1.5-1.2l-6.4-9.5L29.4 7l2.1 18.9zm-4.8 13.7l-15.4-8.2 20.2-2.3-4.8 10.5zm6.1-10.3l15.4 8.2L28 39.8l4.8-10.5zM8.6 7.5l20.2-2.3L24 15.7 8.6 7.5zm15.6 10l7.2 10.6-20.3 2.3 13.1-12.9z"/><ellipse cx="6.8" cy="7.2" rx="2.7" ry="2.7"/><ellipse cx="24.3" cy="16.5" rx="2.7" ry="2.7"/><ellipse cx="29.8" cy="4.6" rx="2.7" ry="2.7"/><ellipse cx="47.3" cy="13.9" rx="2.7" ry="2.7"/><ellipse cx="9.5" cy="31.1" rx="2.7" ry="2.7"/><ellipse cx="27" cy="40.4" rx="2.7" ry="2.7"/><ellipse cx="50" cy="37.8" rx="2.7" ry="2.7"/><ellipse cx="32.5" cy="28.5" rx="2.7" ry="2.7"/></svg>
+          <ul class="nav-list">
+            <li><a href="#">Saved searches</a></li>
+            <li><a href="#">Search history</a></li>
+            <li><a href="#">Documentation</a></li>
+          </ul>
+        </header>
+
+        <main class="main-content">
+          <section class="feature-section">
+            <h1>Choose date range</h1>
+            <div class="feature-box">
+              <form>
+                <div class="form-section range-selection">
+                  <div class="from-range">
+                    <label for="from-date">From</label>
+                    <input id="from-date" class="datepicker" type="text" placeholder="From date..." readonly="" aria-haspopup="true" aria-expanded="false" aria-readonly="false">
+                  </div>
+                  <div>
+                    <label for="to-date">To</label>
+                    <input id="to-date" class="datepicker" type="text" placeholder="To date..." readonly="" aria-haspopup="true" aria-expanded="false" aria-readonly="false">
+                  </div>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <section class="feature-section">
+            <h1>Filter by time interval</h1>
+            <div class="feature-box">
+              <form>
+                <div class="form-section range-selection">
+                  <div class="from-range">
+                    <label for="from-date">From</label>
+                    <input id="from-date" class="timepicker" type="text" placeholder="From time..." readonly="" aria-haspopup="true" aria-expanded="false" aria-readonly="false">
+                  </div>
+                  <div>
+                    <label for="to-date">To</label>
+                    <input id="to-date" class="timepicker" type="text" placeholder="To time..." readonly="" aria-haspopup="true" aria-expanded="false" aria-readonly="false">
+                  </div>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <section class="feature-section">
+            <h1>Filter by subscription status</h1>
+            <div class="feature-box">
+              <div class="tri-state-switch">
+                <div class="tri-state-option">Pre-subscription</div>
+                <div class="tri-state-option selected">All</div>
+                <div class="tri-state-option">Post-subscription</div>
+              </div>
+            </div>
+            <p>Choosing <code>pre-subscription</code> selects all observations from cookie IDs that eventually subscribe in the chosen time frame, <strong>up until the point of subscription</strong>.</p>
+            <p>Choosing <code>post-subscription</code> selects all observations from cookie IDs that eventually subscribe in the chosen time frame, <strong>after the point of subscription</strong>.</p>
+          </section>
+          <section class="feature-section filter-section" data-attribute-name="Category">
+            <h1>Filter by category</h1>
+            <div class="feature-box">
+              <span class="filter-option" data-value-name="aarhus">Aarhus</span>
+              <span class="filter-option" data-value-name="anmeldelser">Anmeldelser</span>
+              <span class="filter-option" data-value-name="debay">Debat</span>
+              <span class="filter-option" data-value-name="erhverv">Erhverv</span>
+              <span class="filter-option" data-value-name="foto">Foto</span>
+              <span class="filter-option" data-value-name="guide">Guide</span>
+              <span class="filter-option" data-value-name="indblik">Indblik</span>
+              <span class="filter-option" data-value-name="indland">Indland</span>
+              <span class="filter-option" data-value-name="kultur">Kultur</span>
+              <span class="filter-option" data-value-name="livsstil">Livsstil</span>
+              <span class="filter-option" data-value-name="politik">Politik</span>
+              <span class="filter-option" data-value-name="viden">Viden</span>
+              <span class="filter-option" data-value-name="sport">Sport</span>
+              <span class="filter-option" data-value-name="international">International</span>
+              <span class="filter-option" data-value-name="other">Other</span>
+            </div>
+          </section>
+          <section class="feature-section filter-section" data-attribute-name="Platform">
+            <h1>Filter by platform</h1>
+            <div class="feature-box">
+              <span class="filter-option" data-value-name="Computer">Computer</span>
+              <span class="filter-option" data-value-name="Mobile">Mobile</span>
+              <span class="filter-option" data-value-name="Table">Tablet</span>
+              <span class="filter-option" data-value-name="Big screen">Big screen</span>
+            </div>
+          </section>
+          <section class="feature-section filter-section" data-attribute-name="Device">
+            <h1>Filter by device</h1>
+            <div class="feature-box">
+              <span class="filter-option" data-value-name="Android Device">Android Device</span>
+              <span class="filter-option" data-value-name="Android Mobile">Android Mobile</span>
+              <span class="filter-option" data-value-name="Android Tablet">Android Tablet</span>
+              <span class="filter-option" data-value-name="iPhone">iPhone</span>
+              <span class="filter-option" data-value-name="iPad">iPad</span>
+              <span class="filter-option" data-value-name="Macintosh Desktop">Macintosh Desktop</span>
+              <span class="filter-option" data-value-name="Linux Desktop">Linux Desktop</span>
+              <span class="filter-option" data-value-name="Windows Desktop">Windows Desktop</span>
+              <span class="filter-option" data-value-name="Windows Mobile">Windows Mobile</span>
+              <span class="filter-option" data-value-name="Windows Desktop">Windows Table</span>
+            </div>
+          </section>
+          <section class="feature-section filter-section" data-attribute-name="Web browser">
+            <h1>Filter by web browser</h1>
+            <div class="feature-box">
+              <span class="filter-option" data-value-name="Chrome">Chrome</span>
+              <span class="filter-option" data-value-name="Safari">Safari</span>
+              <span class="filter-option" data-value-name="Firefox">Firefox</span>
+              <span class="filter-option" data-value-name="Opera">Opera</span>
+              <span class="filter-option" data-value-name="Edge">Microsoft Edge</span>
+              <span class="filter-option" data-value-name="IE">Internet Explorer</span>
+              <span class="filter-option" data-value-name="Facebook for Android">Facebook for Android</span>
+              <span class="filter-option" data-value-name="Facebook for iPhone">Facebook for iPhone</span>
+              <span class="filter-option" data-value-name="Chrome for iOS">Chrome for iOS</span>
+            </div>
+          </section>
+          <section class="feature-section filter-section" data-attribute-name="Operating system">
+            <h1>Filter by operating system</h1>
+            <div class="feature-box">
+              <span class="filter-option" data-value-name="Mac OS">Mac OS</span>
+              <span class="filter-option" data-value-name="Linux">Linux</span>
+              <span class="filter-option" data-value-name="Android">Android</span>
+              <span class="filter-option" data-value-name="iOS">iOS</span>
+              <span class="filter-option" data-value-name="Chromium OS">Chromium OS</span>
+              <span class="filter-option" data-value-name="PlayStation">PlayStation</span>
+              <span class="filter-option" data-value-name="Xbox OS">Xbox OS</span>
+              <span class="filter-option" data-value-name="Windows">Windows</span>
+              <span class="filter-option" data-value-name="Windows Phone">Windows Phone</span>
+            </div>
+          </section>
+          <section class="controller-section flexy" style="justify-content: center;">
+            <button id="result-button" class="big-button">Generate result</button>
+            <a class="big-button" style="background-color: #BBB; color: #555" href="https://www.ibm.com/support/knowledgecenter/en/SVU13_7.2.1/com.ibm.ismsaas.doc/reference/AssetsImportCompleteSample.csv?view=kc">Export raw data</a>
+          </section>
+        </main>
+
+        <div id="result-page" class="main-content" style="background-color: #000">
+          <h1 style="color: #fff; font-weight: normal;text-align: center; font-size: 50px; margin: 0; margin-bottom: 20px;">Result</h1>
+          <section class="feature-section result-section">
+            <h1>Platform</h1>
+            <div id="platform" class="feature-box flexy">
+            </div>
+          </section>
+
+          <section class="feature-section result-section">
+            <h1>Device</h1>
+            <div id="device" class="feature-box flexy">
+            </div>
+          </section>
+
+          <section class="feature-section result-section">
+            <h1>Operating system</h1>
+            <div id="operating-system" class="feature-box flexy">
+            </div>
+          </section>
+
+          <section class="feature-section result-section">
+            <h1>Web browser</h1>
+            <div id="web-browser" class="feature-box flexy">
+            </div>
+          </section>
+          
+          <section class="feature-section result-section">
+            <h1>Category</h1>
+            <div id="category" class="feature-box flexy">
+            </div>
+          </section>
+          <section class="feature-section result-section">
+            <h1>Article</h1>
+            <div class="feature-box">
+            </div>
+          </section>
+
+          <section class="controller-section">
+            <button class="big-button">Download as PDF</button>
+          </section>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/visualize.js"></script>
+        <script src="plugins/pickadate.js-master/lib/picker.js"></script>
+        <script src="plugins/pickadate.js-master/lib/picker.date.js"></script>
+        <script src="plugins/pickadate.js-master/lib/picker.time.js"></script>
+    </body>
+</html>
