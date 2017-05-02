@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ready demo</title>
+  <style>
+  p {
+    color: red;
+  }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </script>
+<script>
+
+var parameters  = [1,2,3]
+
+$.ajax({
+    //Local host (Check its the right one)
+    url : "http://127.0.0.1:5000/process",
+    type: "POST",
+    data : {param: parameters.toString()},
+    datatype : "jsonp",
+    success: function(data, textStatus, jqXHR)
+    {
+        console.log(data.response)
+    },
+    error: function (jqXHR, textStatus, errorThrown)
+    {
+        console.log(textStatus+" "+errorThrown)
+    }
+});
+</script>
+<body>
+
+
+</body>
+</html>
