@@ -1,3 +1,11 @@
+# takes a DataFrame and discards all empty rows (where all attributes are empty)
+def __discard_empty_rows(data):
+    return data.dropna(axis=0, how='all')
+
+# takes a DataFrame and discards all rows where SSO ID is not set
+def __select_sso_data(data):
+    return data.loc[(data['sso'] != 'NOTSET')]
+
 def filter_data(data, filter_options_string):
     import json
 
@@ -10,36 +18,48 @@ def filter_data(data, filter_options_string):
         result = result[result[filter_name].isin(selected)]
     return result
 
-def simple_analysis(jp_data, attribute_name):
-    import pandas as pd
+def simple_analysis(data, attribute_name):
     import json
-    # Select observations where SSO-ID is set
-    only_sso_id = jp_data.loc[(jp_data['sso'] != 'NOTSET') & (pd.notnull(jp_data['sso']))]
     
-    sso_id_count = None
-    primary_counts = sso_id_count
+    # discard empty rows
+    clean_data = __discard_empty_rows(data)
     
-    if not only_sso_id.empty:
-        # Find primary ...
-        grouped_by_sso_id = only_sso_id.groupby(['sso', attribute_name]).size().to_frame(name = 'Count').reset_index()
-        grouped_by_sso_id_max = grouped_by_sso_id.groupby(['sso'], sort = False)[attribute_name, 'Count'].max()
-        
-        # Results        
-        sso_id_count = only_sso_id[attribute_name].value_counts()
-        primary_counts = grouped_by_sso_id_max[attribute_name].value_counts()
-
-    # Results
-    total_count = jp_data[attribute_name].value_counts()
-
-    # Results as JSON
-    total_count_json = json.loads(total_count.to_json())
-    sso_id_count_json = {'No result': 0} if sso_id_count == None else json.loads(sso_id_count.to_json()) 
-    primary_counts_json = {'No result': 0} if sso_id_count == None else json.loads(primary_counts.to_json())
+    no_result_json = {'No result': 0}
+    
+    total_count_json = no_result_json
+    sso_id_count_json = no_result_json
+    primary_count_json = no_result_json
+    
+    # total count
+    if data.empty: return {'total': total_count_json,
+                           'sso': sso_id_count_json,
+                           'primary': primary_count_json}
+    else: total_count_json = json.loads(
+        clean_data[attribute_name].value_counts().to_json()
+    )
+    
+    # select rows where SSO ID is set
+    only_sso_id_data = __select_sso_data(clean_data)
+    
+    # SSO ID count
+    if only_sso_id_data.empty: return {'total': total_count_json,
+                                       'sso': sso_id_count_json,
+                                       'primary': primary_count_json}
+    else: sso_id_count_json = json.loads(
+        only_sso_id_data[attribute_name].value_counts().to_json()
+    )
+    
+    # primary count
+    grouped_by_sso_id = only_sso_id_data.groupby(['sso', attribute_name]).size().to_frame(name = 'Count').reset_index()
+    grouped_by_sso_id_max = grouped_by_sso_id.groupby(['sso'], sort = False)[attribute_name, 'Count'].max()
+    primary_count_json = json.loads(
+        grouped_by_sso_id_max[attribute_name].value_counts().to_json()
+    )
 
     # Merge the three separate JSON objects to a combined JSON object
     combined_result = {'total': total_count_json,
                        'sso': sso_id_count_json,
-                       'primary': primary_counts_json}
+                       'primary': primary_count_json}
     
     return combined_result
 
@@ -47,16 +67,16 @@ def crunch_the_data(path_to_data, filter_options):
     import pandas as pd
     import json
     data = pd.read_csv(path_to_data,
-                   delimiter = '\t',
-                   error_bad_lines = False,
-                   low_memory = False,
-                   index_col = 0
-                )
+                       delimiter = '\t',
+                       error_bad_lines = False,
+                       low_memory = False,
+                       index_col = 0
+                       )
                 
     filtered_data = filter_data(data, filter_options)
+    list_of_attributes = ['Platform', 'Device', 'Operating system', 'Web browser', 'Category']
     
     result = {}
-    list_of_attributes = ['Platform', 'Device', 'Operating system', 'Web browser', 'Category']
     
     for a in list_of_attributes:
         result[a] = simple_analysis(filtered_data, a)
@@ -64,7 +84,7 @@ def crunch_the_data(path_to_data, filter_options):
     return json.dumps(result)
     
 def test():
-    filter_options = '{"filters":[{"filterName":"Platform","selected":["Big screen"]}]}'
+    filter_options = '{"filters":[{"filterName":"Web browser","selected":["Chrome"]}]}'
     result = crunch_the_data('~/JPdatatool/JPdata/jyllandsposten_20170402-20170402_18014v2.tsv', filter_options)
     print(result)
     return result

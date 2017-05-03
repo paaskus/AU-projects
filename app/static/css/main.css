@@ -248,6 +248,16 @@ input[type="submit"]:hover,
     color: rgba(9, 48, 23, 1);
 }
 
+.negative-button {
+    background-color: rgba(250, 55, 45, 0.8) !important;
+    color: rgba(120, 5, 0, 0.8) !important;
+}
+
+.negative-button:hover {
+    background-color: rgba(250, 55, 45, 1) !important;
+    color: rgba(120, 5, 0, 1) !important;
+}
+
 .big-button,
 .big-button:hover {
     display: inline-block;
@@ -267,6 +277,17 @@ input[type="submit"]:hover,
     width: 100%;
     padding: 30px 10px;
     box-sizing: border-box;
+}
+
+/* ICONS */
+
+.loading-icon {
+    height: 40px;
+    width: 40px;
+    fill: #888;
+    stroke: none;
+    stroke-width: 4px;
+    width: 100%;
 }
 
 /* FILTER OPTIONS */
@@ -414,7 +435,7 @@ input[type="submit"]:hover,
 }
 
 .bar:hover {
-    fill: #888;
+    fill: #444;
 }
 
 .axis--x path {
