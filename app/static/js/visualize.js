@@ -2,35 +2,36 @@ function drawCharts(crunchedData) {
     var data = crunchedData;
     
     var platformData = data['Platform'];
-
-    renderBarChart('#platform', platformData.total, 'Total');
-    renderBarChart('#platform', platformData.sso, 'SSO only');
-    renderBarChart('#platform', platformData.primary, 'Primary platform');
+    render3BarCharts(platformData, 'Platform');
 
     var deviceData = data['Device'];
-    
-    renderBarChart('#device', deviceData.total, 'Total');
-    renderBarChart('#device', deviceData.sso, 'SSO only');
-    renderBarChart('#device', deviceData.primary, 'Primary device');
+    render3BarCharts(deviceData, 'Device');
 
     var operatingSystemData = data['Operating system'];
-
-    renderBarChart('#operating-system', operatingSystemData.total, 'Total');
-    renderBarChart('#operating-system', operatingSystemData.sso, 'SSO only');
-    renderBarChart('#operating-system', operatingSystemData.primary, 'Primary operating system');
+    render3BarCharts(operatingSystemData, 'Operating system');
 
     var webBrowserData = data['Web browser'];
-
-    renderBarChart('#web-browser', webBrowserData.total, 'Total');
-    renderBarChart('#web-browser', webBrowserData.sso, 'SSO only');
-    renderBarChart('#web-browser', webBrowserData.primary, 'Primary web browser');
+    render3BarCharts(webBrowserData, 'Web browser');
 
     var categoryData = data['Category'];
-
-    renderBarChart('#category', categoryData.total, 'Total');
-    renderBarChart('#category', categoryData.sso, 'SSO only');
-    renderBarChart('#category', categoryData.primary, 'Primary category');
+    render3BarCharts(categoryData, 'Category');
 };
+
+function render3BarCharts(data, attributeName) {
+    var containerID = attributeNameToID(attributeName);
+    renderBarChart(containerID, data.total, 'Total');
+    renderBarChart(containerID, data.sso, 'SSO only');
+    renderBarChart(containerID, data.primary, 'Primary ' + attributeName.toLowerCase());
+}
+
+/* 
+ * transforms a string of form 'Operating system' to a string of form '#operating-system'
+ */
+function attributeNameToID(attributeName) {
+    var lowercase = attributeName.toLowerCase();
+    var hyphenated = lowercase.split(' ').join('-');
+    return '#'+hyphenated;
+}
 
 // D3
 function renderBarChart(containerID, barchartdata, chartname) {

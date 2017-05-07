@@ -30,11 +30,14 @@ def simple_analysis(data, attribute_name):
     sso_id_count_json = no_result_json
     primary_count_json = no_result_json
     
+    # Merge the three separate JSON objects to a combined JSON object
+    combined_result = {'total': total_count_json,
+                       'sso': sso_id_count_json,
+                       'primary': primary_count_json}
+    
     # total count
-    if data.empty: return {'total': total_count_json,
-                           'sso': sso_id_count_json,
-                           'primary': primary_count_json}
-    else: total_count_json = json.loads(
+    if data.empty: return combined_result
+    else: combined_result['total'] = json.loads(
         clean_data[attribute_name].value_counts().to_json()
     )
     
@@ -42,24 +45,17 @@ def simple_analysis(data, attribute_name):
     only_sso_id_data = __select_sso_data(clean_data)
     
     # SSO ID count
-    if only_sso_id_data.empty: return {'total': total_count_json,
-                                       'sso': sso_id_count_json,
-                                       'primary': primary_count_json}
-    else: sso_id_count_json = json.loads(
+    if only_sso_id_data.empty: return combined_result
+    else: combined_result['sso'] = json.loads(
         only_sso_id_data[attribute_name].value_counts().to_json()
     )
     
     # primary count
     grouped_by_sso_id = only_sso_id_data.groupby(['sso', attribute_name]).size().to_frame(name = 'Count').reset_index()
     grouped_by_sso_id_max = grouped_by_sso_id.groupby(['sso'], sort = False)[attribute_name, 'Count'].max()
-    primary_count_json = json.loads(
+    combined_result['primary'] = json.loads(
         grouped_by_sso_id_max[attribute_name].value_counts().to_json()
     )
-
-    # Merge the three separate JSON objects to a combined JSON object
-    combined_result = {'total': total_count_json,
-                       'sso': sso_id_count_json,
-                       'primary': primary_count_json}
     
     return combined_result
 

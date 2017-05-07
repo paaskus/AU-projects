@@ -25,7 +25,7 @@ $(document).ready(function() {
         var filters = getFilters();
         configuration.filters = filters;
         console.log(JSON.stringify(configuration));
-        ajax(configuration);
+        requestResult(configuration);
         $('#result-page').show();
         $('html, body').animate({ scrollTop: $('#result-page').offset().top }, 1500);
         insertLoadingIcons();
@@ -54,7 +54,7 @@ function getFilters() {
     return filters;
 }
 
-function ajax(filters) {
+function requestResult(filters) {
     $.post({
         url: 'http://localhost:5000/' + 'get-result',
         data: JSON.stringify(filters),
