@@ -37,3 +37,10 @@ flycheck_*.el
 
 # projectiles files
 .projectile
+
+# Data
+/JPdata/
+
+# Python
+*.pyc
+__pycache__/
