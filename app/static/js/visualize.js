@@ -33,10 +33,29 @@ function attributeNameToID(attributeName) {
     return '#'+hyphenated;
 }
 
+function sortByValue(object) {
+    // convert object into array
+    var sorted = [];
+    for (var key in object)
+	sorted.push([key, object[key]]); // each item is an array in format [key, value]
+    
+    // sort items by value
+    sorted.sort(function(a, b) {
+	return b[1] - a[1]; // compare numbers
+    });
+    
+    return sorted; // array in format [ [ key1, val1 ], [ key2, val2 ], ... ]
+}
+
 // D3
 function renderBarChart(containerID, barchartdata, chartname) {
-    var keys = Object.keys(barchartdata);
-    var values = Object.values(barchartdata);
+    var sortedData = sortByValue(barchartdata);
+    var keys = sortedData.map(function(obj) {
+	return obj[0] // keys
+    });
+    var values = sortedData.map(function(obj) {
+	return obj[1] // values
+    });
     
     var $svg = $('<svg class="chart" width="380" height="450" viewBox="0 0 380 450" preerveAspectRatio="xMinYMin meet"></svg>');
     $(containerID).append($svg);

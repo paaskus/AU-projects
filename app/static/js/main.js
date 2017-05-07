@@ -89,7 +89,6 @@ function LoadingIcon() {
             var radius = 1.125 + 0.18 * index;
             $(circle).attr("r", radius);
         });
-        console.log("loading");
         var timer = null;
         if (this.loading)
             timer = setTimeout(this.showLoadingAnimation, 125);
