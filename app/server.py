@@ -11,6 +11,10 @@ def get_result():
     result = sga.crunch_the_data(path_to_data, filters)
     return Response(result, mimetype='application/json')
 
+@app.route('/get-raw-result', methods=['GET'])
+def get_raw_result():
+    return None
+
 @app.route('/')
 def index():
     return render_template('index.html')

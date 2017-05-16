@@ -16,6 +16,10 @@ def filter_data(data, filter_options_string):
         filter_name = f['filterName']
         selected = f['selected']
         result = result[result[filter_name].isin(selected)]
+    
+    # output result to .csv, if user wants the raw, filtered data
+    result.to_csv('~/JPdatatool/app/static/filtered_result.csv')    
+    
     return result
 
 def simple_analysis(data, attribute_name):
@@ -80,7 +84,7 @@ def crunch_the_data(path_to_data, filter_options):
     return json.dumps(result)
     
 def test():
-    filter_options = '{"filters":[{"filterName":"Web browser","selected":["Chrome"]}]}'
+    filter_options = '{"filters":[]}'
     result = crunch_the_data('~/JPdatatool/JPdata/jyllandsposten_20170402-20170402_18014v2.tsv', filter_options)
     print(result)
     return result
