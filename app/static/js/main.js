@@ -25,7 +25,8 @@ $(document).ready(function() {
         var filters = getFilters();
         configuration.filters = filters;
         console.log(JSON.stringify(configuration));
-        requestResult(configuration);
+        drawCharts("no data");
+        // requestResult(configuration);
         $('#result-page').show();
         $('html, body').animate({ scrollTop: $('#result-page').offset().top }, 1500);
         insertLoadingIcons();
