@@ -22,7 +22,7 @@ def filter_data(data, filter_options_string):
         result = result[result[filter_name].isin(selected)]
     
     # output result to .csv, if user wants the raw, filtered data
-    result.to_csv('~/JPdatatool/app/static/filtered_result.csv')    
+    # result.to_csv('~/JPdatatool/app/static/filtered_result.csv')    
     
     return result
 
@@ -120,8 +120,8 @@ def barrunasonify(old_object):
                                                  'mapped':mapped[c]}
             new_sub_object[b]=new_sub_sub_sub_object
         new_object[a] = new_sub_object
-    
     return new_object
+    
 def crunch_the_data(path_to_data, filter_options):
     import pandas as pd
     import json
