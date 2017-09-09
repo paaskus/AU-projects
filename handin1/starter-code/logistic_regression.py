@@ -4,6 +4,8 @@ import scipy
 from sklearn.metrics import confusion_matrix
 from h1_util import numerical_grad_check
 
+testres = 0
+
 def logistic(z):
     """ 
     Computes the logistic function 1/(1+e^{-x}) to each entry in input vector z.
@@ -15,7 +17,8 @@ def logistic(z):
        logi: numpy array shape (d,) each entry transformed by the logistic function 
     """
     logi = np.zeros(z.shape)
-    ### YOUR CODE HERE 
+    ### YOUR CODE HERE
+    logi = np.array(list(map(lambda x: 1/(1+np.exp(-x)), z)))
     ### END CODE
     assert logi.shape == z.shape
     return logi
