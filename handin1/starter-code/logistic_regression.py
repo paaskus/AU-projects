@@ -18,7 +18,7 @@ def logistic(z):
     """
     logi = np.zeros(z.shape)
     ### YOUR CODE HERE
-    logi = np.array(list(map(lambda x: 1/(1+np.exp(-x)), z)))
+    logi = np.vectorize(lambda x: 1/(1+np.exp(-x)))(z)
     ### END CODE
     assert logi.shape == z.shape
     return logi
@@ -44,6 +44,23 @@ def log_cost(X, y, w, reg=0):
     cost = 0
     grad = np.zeros(w.shape)
     ### YOUR CODE HERE
+    n = X.shape[0]
+    def nll_helper(x_i, y_i):
+        logdot = logistic(np.dot(w, x_i))
+        return y_i * np.log(logdot) + (1-y_i) * np.log(1-logdot)
+    
+    for i in range(0, n):
+        cost += nll_helper(X[i], y[i])
+    
+    # average cost negate it
+    cost = 1/n * (-cost)
+        
+    # regularize
+    l2reg = 0.5 * reg * np.sum(np.vectorize(lambda x: np.abs(x)**2)(np.delete(w, 0)))
+    cost += l2reg
+    
+    # grad
+    grad = 1/n * (-np.dot(np.transpose(X), (y - logistic(np.dot(X, w)))))
     ### END CODE
     assert grad.shape == w.shape
     return cost, grad
@@ -118,7 +135,7 @@ def test_cost():
     y = np.array([0, 0], dtype='int64')
     w = np.array([0.0, 0.0])
     reg = 0
-    cost,_ = log_cost(X,y, w)
+    cost,_ = log_cost(X,y, w, reg)
     target = -np.log(0.5)
     assert np.allclose(cost, target), 'Cost Function Error:  Expected {0} - Got {1}'.format(target, cost)
     print('Test Success')
