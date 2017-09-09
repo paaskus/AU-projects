@@ -83,6 +83,9 @@ def batch_grad_descent(X, y, w=None, reg=0, lr=1.0, rounds=10):
     if w is None: w = np.zeros(X.shape[1])    
     #lr = 1.0
     ### YOUR CODE HERE
+    for i in range(0, rounds):
+        grad,_ = log_cost(X, y, w, reg)
+        w = w - lr * grad
     ### END CODE
     return w
     
@@ -110,6 +113,12 @@ def mini_batch_grad_descent(X, y, w=None, reg=0, lr=0.1, batch_size=16, epochs=1
     """
     if w is None: w = np.zeros(X.shape[1])
     ### YOUR CODE
+    training_data = zip(X, y)
+    for i in range(0, epochs):
+        X_batch, y_batch = zip(*np.random.permutation(training_data)[0:batch_size])
+        grad,_ = log_cost(X_batch, y_batch, w, reg)
+        grad = 1/batch_size * grad
+        w = w - (lr * grad)
     ### END CODE
     return w
 
