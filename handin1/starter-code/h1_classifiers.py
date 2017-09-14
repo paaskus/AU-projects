@@ -26,6 +26,8 @@ class LogisticClassifierTwoClass(MlModel):
 
         X = np.c_[np.ones(X_.shape[0]), X_] # Add one for bias to the first columns
         ### YOUR CODE HERE
+        self.w = log_reg.mini_batch_grad_descent(X, y, None, reg, lr, batch_size, epochs)
+        #self.w = log_reg.fast_descent(X, y, None, reg)
         ### END CODE
         
     def visualize_model(self, ax):
@@ -44,6 +46,9 @@ class LogisticClassifierTwoClass(MlModel):
         X = np.c_[np.ones(X_.shape[0]), X_] # Add one for bias to the first columns
         predictions = np.zeros(X.shape[0])
         ### YOUR CODE HERE
+        probs = self.probability(X_)
+        for i in range(0, X.shape[0]):
+            predictions[i] = probs[i] >= 0.5
         ### END CODE
         assert predictions.shape == (X.shape[0],)
         return predictions.astype('int64')
@@ -55,11 +60,13 @@ class LogisticClassifierTwoClass(MlModel):
         Args:
          X_: np.array  shape (n,d)
         Returns:
-         probs: np.array shape (n,) 
+         probs: np.array shape (n,)
         """
         X = np.c_[np.ones(X_.shape[0]), X_] # Add one for bias to the first columns
         probs = np.zeros(X.shape[0])
         ### YOUR CODE HERE
+        for i in range(0, X.shape[0]):
+            probs[i] = log_reg.logistic(np.dot(self.w, X[i]))
         ### END CODE
         assert probs.shape == (X.shape[0],)
         return probs
@@ -85,7 +92,7 @@ class LogisticClassifier(MlModel):
         Fill self.models with a one-vs-all model one for each class y must be in [0, num_classes-1]
         Each model should be a LogisticClassifierTwoClass
         For each class c you should make a label vector that is one for y=c and 0 otherwise and train a one-vs-all classifer with for that class.       
-        That way the higher the proability output by the classifier for class c the more likely that the classifier thinks the data point is in class c.
+        That way the higher the probability output by the classifier for class c the more likely that the classifier thinks the data point is in class c.
         
         Args:
           X_: np.array shape (n,d) float - Each row is a data point
@@ -98,6 +105,14 @@ class LogisticClassifier(MlModel):
         self.classes = np.sort(np.unique(y))
         self.models = []
         ### YOUR CODE HERE 5-10 lines
+        n = X.shape[0]
+        for c in self.classes:
+            one_vs_all_y = np.zeros(n)
+            for i in range(0, n):
+                if (y[i] == c): one_vs_all_y[i] = 1
+            model = LogisticClassifierTwoClass()
+            model.train(X, one_vs_all_y, reg, lr, epochs, batch_size)
+            self.models.append(model)
         ### END CODE
         assert len(self.models) == len(self.classes)
 
@@ -113,10 +128,25 @@ class LogisticClassifier(MlModel):
         """
         pred = np.zeros(X.shape[0])
         ### YOUR CODE HERE 1-3 lines
+        all_model_predictions = []
+        for i in range(0, len(self.models)):
+            all_model_predictions.append(self.models[i].predict(X))
+        all_model_predictions = np.stack(all_model_predictions, axis=1)
+        res = []
+        for i in range(0, X.shape[0]):
+            res.append(np.argmax(pred[i]))
+        pred = np.array(res)
         ### END CODE
         assert pred.shape == (X.shape[0],)
         return pred
 
+def test_classifier():
+    X = np.array([[1.0, 1.0, 1.0, 0.0], [0, 0, 0, 1.0], [0, 1.0, 0, 1.0]])
+    y = np.array([0, 1, 0]).astype('int64')
+    reg = 0
+    classifier = LogisticClassifier()
+    classifier.train(X, y, reg)
+    classifier.predict(X)
 
 class SoftmaxClassifier(MlModel):
     """ Softmax Model Classifier trained using mini-batch gradient descent """
@@ -193,7 +223,20 @@ def model_accuracy(model, X, y):
     acc: scalar  Percentage of correct predictions (=y) for model on X 
     """
     acc = None
-    ### YOUR CODE HERE 1-2 lines   
+    ### YOUR CODE HERE 1-2 lines
+    #print("-"*10+" MODEL ACCURACY "+"-"*10)
+    n = X.shape[0]
+    predictions = model.predict(X)
+    #print(" "*8 + "-- PREDICTIONS --"+" "*8)
+    #print(predictions)
+    #print(" "*8 + "-- CORRECT --"+" "*8)
+    #print(y)
+    #print(predictions)
+    correct_prediction_count = 0
+    for i in range(0, n):
+        if predictions[i] == y[i]:
+            correct_prediction_count += 1
+    acc = correct_prediction_count/n
     ### END CODE
     return acc
 
@@ -212,7 +255,7 @@ def run_validation(model, X, y, params, val_size=0.2, **kwargs):
        model: input MlModel trained with best regularization params on all training data (X,y)
        acc: numpy array, the validation scores for params input
     """
-    acc =  np.zeros(len(params))
+    acc = np.zeros(len(params))
     n = y.size
     val_size = int(n*0.2)
     val_train = X[0:val_size,:]
