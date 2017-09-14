@@ -20,7 +20,7 @@ def softmax(X):
     
     For each row x do:
     compute max of x
-    compute the log og the denominator for softmax but subtracting out the max i.e (log sum exp x-max) + max
+    compute the log of the denominator for softmax but subtracting out the max i.e (log sum exp x-max) + max
     compute log of the softmax: x - lsm
     exponentiate that
     
@@ -33,6 +33,12 @@ def softmax(X):
     """
     res = np.zeros(X.shape)
     ### YOUR CODE HERE no for loops please
+    def softmax_vector(x):
+        x_max = np.amax(x)
+        denominator = np.log(np.sum(np.exp(x - x_max))) + x_max
+        return np.exp(x - denominator)
+    for i in range(0, X.shape[0]):
+        res[i] = softmax_vector(X[i])
     ### END CODE
     return res
     
@@ -43,7 +49,7 @@ def soft_cost(X, Y, W, reg=0.0):
     using data X,y and weight vector w.
     Remember not to regualarize the bias parameters which are the first index of each model i.e. the first row of W.
 
-    the functions np.nonzero, np.su, np.dot (@), may come in handy
+    the functions np.nonzero, np.sum, np.dot (@), may come in handy
     Args:
         X: numpy array shape (n, d) - the data each row is a data point
         Y: numpy array shape (n, k) target values in 1-in-K encoding (n x K)
@@ -58,6 +64,17 @@ def soft_cost(X, Y, W, reg=0.0):
     cost = np.nan
     grad = np.zeros(W.shape)*np.nan
     ### YOUR CODE HERE
+    for i in range(0, input_size):
+        x = X[i]
+        y = Y[i]
+        j = np.nonzero(y)
+        w_dot_x = np.dot(np.transpose(W), x)
+        cost += -(w_dot_x[j] - np.sum(np.exp(w_dot_x)))
+        #cost += np.dot(y, np.log(softmax(np.dot(np.transpose(W), x))))
+    cost = (-cost)/input_size
+    l2reg = 0.5 * reg * np.sum(np.dot(np.transpose(W[1:]), W[1:]))
+    cost += l2reg
+    grad = (-np.transpose(X) @ (Y - softmax(X @ W)))/input_size
     ### END CODE
     return cost, grad
 
