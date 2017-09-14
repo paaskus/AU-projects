@@ -1,10 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy
+import math
 from sklearn.metrics import confusion_matrix
 from h1_util import numerical_grad_check
 
-testres = 0
+np.seterr(all='raise')
 
 def logistic(z):
     """ 
@@ -18,7 +19,11 @@ def logistic(z):
     """
     logi = np.zeros(z.shape)
     ### YOUR CODE HERE
-    logi = np.vectorize(lambda x: 1/(1+np.exp(-x)))(z)
+    def sigmoid(x):
+        #if (x > 30): return 0.99999
+        #if (x < -30): return 0.00001
+        return 1/(1 + np.exp(-x))
+    logi = np.vectorize(sigmoid)(z)
     ### END CODE
     assert logi.shape == z.shape
     return logi
@@ -44,23 +49,22 @@ def log_cost(X, y, w, reg=0):
     cost = 0
     grad = np.zeros(w.shape)
     ### YOUR CODE HERE
-    n = X.shape[0]
-    def nll_helper(x_i, y_i):
-        logdot = logistic(np.dot(w, x_i))
-        return y_i * np.log(logdot) + (1-y_i) * np.log(1-logdot)
-    
-    for i in range(0, n):
-        cost += nll_helper(X[i], y[i])
-    
-    # average cost negate it
-    cost = 1/n * (-cost)
-        
-    # regularize
-    l2reg = 0.5 * reg * np.sum(np.vectorize(lambda x: np.abs(x)**2)(np.delete(w, 0)))
+    n = np.array(X).shape[0]
+    def log_likelihood(X, y, w):
+        ll = 0
+        for i in range(0, n):
+            x = logistic(np.dot(w, X[i]))
+            if y[i] == 1:
+                ll += y[i] * np.log(x)
+            else: # y[i] == 0
+                if x == 1: x = 0.9999999999999999
+                ll += np.log(1-x)
+        return ll
+    nll = - log_likelihood(X, y, w)
+    cost = 1/n * nll
+    grad = 1/n * (-np.dot((np.transpose(X)), (y - logistic(np.dot(X, w)))))
+    l2reg = 0.5 * reg * np.sum(np.dot(w[1:], w[1:]))
     cost += l2reg
-    
-    # grad
-    grad = 1/n * (-np.dot(np.transpose(X), (y - logistic(np.dot(X, w)))))
     ### END CODE
     assert grad.shape == w.shape
     return cost, grad
@@ -84,7 +88,7 @@ def batch_grad_descent(X, y, w=None, reg=0, lr=1.0, rounds=10):
     #lr = 1.0
     ### YOUR CODE HERE
     for i in range(0, rounds):
-        grad,_ = log_cost(X, y, w, reg)
+        cost,grad = log_cost(X, y, w, reg)
         w = w - lr * grad
     ### END CODE
     return w
@@ -113,12 +117,20 @@ def mini_batch_grad_descent(X, y, w=None, reg=0, lr=0.1, batch_size=16, epochs=1
     """
     if w is None: w = np.zeros(X.shape[1])
     ### YOUR CODE
-    training_data = zip(X, y)
+    n = X.shape[0]
+    def generate_minibatches(X, y, batch_size):
+        indices = np.arange(n)
+        np.random.shuffle(indices)
+        for i in range(0, n - batch_size + 1, batch_size):
+            excerpt = indices[i:i + batch_size]
+            yield X[excerpt], y[excerpt]
+
     for i in range(0, epochs):
-        X_batch, y_batch = zip(*np.random.permutation(training_data)[0:batch_size])
-        grad,_ = log_cost(X_batch, y_batch, w, reg)
-        grad = 1/batch_size * grad
-        w = w - (lr * grad)
+        for batch in generate_minibatches(X, y, batch_size):
+            X_batch, y_batch = batch
+            cost,grad = log_cost(X_batch, y_batch, w, reg)
+            grad = 1/batch_size * grad
+            w = w - (lr * grad)
     ### END CODE
     return w
 
@@ -179,7 +191,16 @@ def test_reg_grad():
     f = lambda z: log_cost(X, y, w=z, reg=reg)
     numerical_grad_check(f, w)
     print('Test Success')
-
+    
+def test_minibatch():
+    print('*'*5, 'Testing Minibatch Gradient')
+    X = np.array([[1.0, 0.0], [1.0, 1.0]])
+    w = np.array([0.0, 1.0])
+    y = np.array([0, 0]).astype('int64')
+    reg = 0
+    w_trained = mini_batch_grad_descent(X, y, w, reg, 0.1, batch_size=1, epochs=10)
+    print(w_trained)
+    print('Test Success')
     
 if __name__ == '__main__':
     test_logistic()
