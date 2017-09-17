@@ -33,15 +33,11 @@ def softmax(X):
     """
     res = np.zeros(X.shape)
     ### YOUR CODE HERE no for loops please
-    def softmax_vector(x):
-        x_max = np.amax(x)
-        denominator = np.log(np.sum(np.exp(x - x_max))) + x_max
-        return np.exp(x - denominator)
-    for i in range(0, X.shape[0]):
-        res[i] = softmax_vector(X[i])
+    X_max = np.amax(X)
+    denom = np.log(np.sum(np.exp(X - X_max), keepdims=True, axis=1)) + X_max
+    res = np.exp(X - denom)
     ### END CODE
     return res
-    
     
 def soft_cost(X, Y, W, reg=0.0):
     """ 
