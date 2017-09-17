@@ -60,17 +60,42 @@ def soft_cost(X, Y, W, reg=0.0):
     cost = np.nan
     grad = np.zeros(W.shape)*np.nan
     ### YOUR CODE HERE
-    for i in range(0, input_size):
-        x = X[i]
-        y = Y[i]
-        j = np.nonzero(y)
-        w_dot_x = np.dot(np.transpose(W), x)
-        cost += -(w_dot_x[j] - np.sum(np.exp(w_dot_x)))
-        #cost += np.dot(y, np.log(softmax(np.dot(np.transpose(W), x))))
-    cost = (-cost)/input_size
-    l2reg = 0.5 * reg * np.sum(np.dot(np.transpose(W[1:]), W[1:]))
-    cost += l2reg
-    grad = (-np.transpose(X) @ (Y - softmax(X @ W)))/input_size
+    scores = np.dot(X, W)
+    scores -= np.max(scores) # shift by log C to avoid numerical instability
+
+    # matrix of all zeros except for a single wx + log C value in each column that corresponds to the
+    # quantity we need to subtract from each row of scores
+    correct_wx = np.multiply(Y, scores)
+
+    # create a single row of the correct wx_y + log C values for each data point
+    sums_wy = np.sum(correct_wx, axis=0) # sum over each column
+
+    exp_scores = np.exp(scores)
+    sums_exp = np.sum(exp_scores, axis=0) # sum over each column
+    result = np.log(sums_exp)
+
+    result -= sums_wy
+
+    cost = np.sum(result)
+
+    # calc average
+    cost /= input_size
+
+    # regularize cost
+    cost += 0.5 * reg * np.sum(W * W)
+
+    sum_exp_scores = np.sum(exp_scores, axis=0) # sum over columns
+    sum_exp_scores = 1.0 / (sum_exp_scores + 1e-8)
+
+    grad = exp_scores * sum_exp_scores
+    grad = np.dot(X.T, grad)
+    grad -= np.dot(X.T, Y)
+
+    # calc average
+    grad /= input_size
+
+    # regularize gradient
+    grad += reg * W
     ### END CODE
     return cost, grad
 
