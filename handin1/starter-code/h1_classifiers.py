@@ -224,19 +224,7 @@ def model_accuracy(model, X, y):
     """
     acc = None
     ### YOUR CODE HERE 1-2 lines
-    #print("-"*10+" MODEL ACCURACY "+"-"*10)
-    n = X.shape[0]
-    predictions = model.predict(X)
-    #print(" "*8 + "-- PREDICTIONS --"+" "*8)
-    #print(predictions)
-    #print(" "*8 + "-- CORRECT --"+" "*8)
-    #print(y)
-    #print(predictions)
-    correct_prediction_count = 0
-    for i in range(0, n):
-        if predictions[i] == y[i]:
-            correct_prediction_count += 1
-    acc = correct_prediction_count/n
+    acc = np.mean(model.predict(X) == y)
     ### END CODE
     return acc
 
