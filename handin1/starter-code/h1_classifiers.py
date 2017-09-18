@@ -27,7 +27,6 @@ class LogisticClassifierTwoClass(MlModel):
         X = np.c_[np.ones(X_.shape[0]), X_] # Add one for bias to the first columns
         ### YOUR CODE HERE
         self.w = log_reg.mini_batch_grad_descent(X, y, None, reg, lr, batch_size, epochs)
-        #self.w = log_reg.fast_descent(X, y, None, reg)
         ### END CODE
         
     def visualize_model(self, ax):
@@ -132,14 +131,6 @@ class LogisticClassifier(MlModel):
         ### END CODE
         assert pred.shape == (X.shape[0],)
         return pred
-
-def test_classifier():
-    X = np.array([[1.0, 1.0, 1.0, 0.0], [0, 0, 0, 1.0], [0, 1.0, 0, 1.0]])
-    y = np.array([0, 1, 0]).astype('int64')
-    reg = 0
-    classifier = LogisticClassifier()
-    classifier.train(X, y, reg)
-    classifier.predict(X)
 
 class SoftmaxClassifier(MlModel):
     """ Softmax Model Classifier trained using mini-batch gradient descent """
