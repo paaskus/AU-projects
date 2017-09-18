@@ -128,14 +128,7 @@ class LogisticClassifier(MlModel):
         """
         pred = np.zeros(X.shape[0])
         ### YOUR CODE HERE 1-3 lines
-        all_model_predictions = []
-        for i in range(0, len(self.models)):
-            all_model_predictions.append(self.models[i].predict(X))
-        all_model_predictions = np.stack(all_model_predictions, axis=1)
-        res = []
-        for i in range(0, X.shape[0]):
-            res.append(np.argmax(pred[i]))
-        pred = np.array(res)
+        pred = np.argmax(np.stack(list(map(lambda model: model.probability(X), self.models)), axis=1), axis=1)
         ### END CODE
         assert pred.shape == (X.shape[0],)
         return pred
