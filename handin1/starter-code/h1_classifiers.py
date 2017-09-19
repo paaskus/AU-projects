@@ -241,6 +241,10 @@ def run_validation(model, X, y, params, val_size=0.2, **kwargs):
     target = y[val_size+1:]
     acc = np.zeros(len(params))
     ### YOUR CODE HERE 5-10 lines
+    for i in range(len(params)):
+        model.train(train, target, reg=params[i])
+        acc[i] = model_accuracy(model, val_train, val_target)
+    model.train(X, y, params[np.argmax(acc)])
     ### END CODE
     return model, acc
         
