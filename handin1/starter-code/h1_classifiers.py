@@ -153,8 +153,8 @@ class SoftmaxClassifier(MlModel):
         y_as_matrix[np.arange(y.shape[0]), y] = 1
         X = np.c_[np.ones(X_.shape[0]), X_] # add bias variable 1
         ### YOUR CODE HERE
-        print("Now training Softmax classifier with parameters: ", "reg: ", reg, ", lr:", lr, ", epochs: ", epochs, ", batch_size: ", batch_size)
-        self.w = soft_reg.mini_batch_grad_descent(X, y_as_matrix, self.w, reg, lr, epochs, batch_size)
+        print("Now training Softmax classifier with parameters:", "reg=", reg, ", lr=", lr, ", epochs=", epochs, ", batch_size=", batch_size)
+        self.w = soft_reg.mini_batch_grad_descent(X, y_as_matrix, None, reg, lr, epochs, batch_size)
         ### END CODE
             
     def predict(self, X_):
