@@ -20,8 +20,6 @@ def logistic(z):
     logi = np.zeros(z.shape)
     ### YOUR CODE HERE
     def sigmoid(x):
-        #if (x > 30): return 0.99999
-        #if (x < -30): return 0.00001
         return 1/(1 + np.exp(-x))
     logi = np.vectorize(sigmoid)(z)
     ### END CODE
@@ -51,7 +49,7 @@ def log_cost(X, y, w, reg=0):
     ### YOUR CODE HERE
     n = np.array(X).shape[0]
     def log_likelihood(X, y, w):
-        ll = 0
+        ll = 0 # log likelihood
         for i in range(0, n):
             x = logistic(np.dot(w, X[i]))
             if y[i] == 1:
@@ -60,7 +58,7 @@ def log_cost(X, y, w, reg=0):
                 if x == 1: x = 0.9999999999999999
                 ll += np.log(1-x)
         return ll
-    nll = - log_likelihood(X, y, w)
+    nll = - log_likelihood(X, y, w) # negative log likelihood
     cost = 1/n * nll
     grad = 1/n * (-np.dot((np.transpose(X)), (y - logistic(np.dot(X, w)))))
     l2reg = 0.5 * reg * np.sum(np.dot(w[1:], w[1:]))
