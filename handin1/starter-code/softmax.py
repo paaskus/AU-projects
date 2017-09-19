@@ -34,7 +34,8 @@ def softmax(X):
     res = np.zeros(X.shape)
     ### YOUR CODE HERE no for loops please
     X_max = np.amax(X)
-    denom = np.log(np.sum(np.exp(X - X_max), keepdims=True, axis=1)) + X_max
+    sum_axis = 1 if len(X.shape) == 2 else 0 # fix axis error (if X is one-dimensional)
+    denom = np.log(np.sum(np.exp(X - X_max), keepdims=True, axis=sum_axis)) + X_max
     res = np.exp(X - denom)
     ### END CODE
     return res
@@ -114,6 +115,9 @@ def batch_grad_descent(X, Y, W=None, reg=0.0, lr=0.5, rounds=10):
     """
     if W is None: W = np.zeros((X.shape[1], Y.shape[1]))
     ### YOUR CODE HERE
+    for i in range(0, rounds):
+        cost, grad = soft_cost(X, Y, W, reg)
+        W = W - lr * grad
     ### END CODE
     return W
 
@@ -136,6 +140,22 @@ def mini_batch_grad_descent(X, Y, W=None, reg=0.0, lr=0.1, epochs=10, batch_size
     """
     if W is None: W = np.zeros((X.shape[1],Y.shape[1]))
     ### YOUR CODE HERE
+    n = X.shape[0]
+    def generate_minibatches(X, Y, batch_size):
+        indices = np.arange(n)
+        np.random.shuffle(indices)
+        for i in range(0, n - batch_size + 1, batch_size):
+            excerpt = indices[i:i + batch_size]
+            yield X[excerpt], Y[excerpt]
+
+    for i in range(0, epochs):
+        #print("Epoch ", i, " in mini_batch_grad_descent")
+        #print("Data dimensions are ", X.shape)
+        for batch in generate_minibatches(X, Y, batch_size):
+            X_batch, Y_batch = batch
+            cost, grad = soft_cost(X_batch, Y_batch, W, reg)
+            grad = 1/batch_size * grad
+            W = W - (lr * grad)
     ### END CODE
     return W
 
