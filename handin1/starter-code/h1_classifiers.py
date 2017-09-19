@@ -45,9 +45,7 @@ class LogisticClassifierTwoClass(MlModel):
         X = np.c_[np.ones(X_.shape[0]), X_] # Add one for bias to the first columns
         predictions = np.zeros(X.shape[0])
         ### YOUR CODE HERE
-        probs = self.probability(X_)
-        for i in range(0, X.shape[0]):
-            predictions[i] = probs[i] >= 0.5
+        predictions = self.probability(X_) >= 0.5
         ### END CODE
         assert predictions.shape == (X.shape[0],)
         return predictions.astype('int64')
