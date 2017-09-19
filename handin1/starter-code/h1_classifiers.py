@@ -136,6 +136,8 @@ class SoftmaxClassifier(MlModel):
     def __init__(self):
         self.w = None
         self.name = 'Softmax'
+        self.classes = []
+        self.num_classes = 0
 
     def train(self, X_, y, reg=1e-4, lr=0.1, epochs=5, batch_size=16):
         """ Train a softmax model using mini_batch_grad_descent and assign the parameters to self.w 
@@ -146,11 +148,13 @@ class SoftmaxClassifier(MlModel):
         """
         # set up classes and make y into a matrix 1 in k encoded
         self.classes = np.sort(np.unique(y))
-        num_classes = self.classes.size
-        y_as_matrix = np.zeros((y.size, num_classes))
+        self.num_classes = self.classes.size
+        y_as_matrix = np.zeros((y.size, self.num_classes))
         y_as_matrix[np.arange(y.shape[0]), y] = 1
         X = np.c_[np.ones(X_.shape[0]), X_] # add bias variable 1
-        ### YOUR CODE HERE        
+        ### YOUR CODE HERE
+        print("Now training Softmax classifier with parameters: ", "reg: ", reg, ", lr:", lr, ", epochs: ", epochs, ", batch_size: ", batch_size)
+        self.w = soft_reg.mini_batch_grad_descent(X, y_as_matrix, self.w, reg, lr, epochs, batch_size)
         ### END CODE
             
     def predict(self, X_):
@@ -166,6 +170,7 @@ class SoftmaxClassifier(MlModel):
         X = np.c_[np.ones(X_.shape[0]), X_] # add bias variable 1
         pred = np.zeros(X.shape[0])
         ### YOUR CODE HERE
+        pred = np.argmax(self.probability(X_), axis=1)
         ### END CODE
         return pred
         
@@ -176,8 +181,10 @@ class SoftmaxClassifier(MlModel):
           X_: np.array shape (n,d) dtype float - Features 
         """
         X = np.c_[np.ones(X_.shape[0]), X_] # add bias variable 1
-        prob = np.zeros(X.shape[0], self.num_classes)
+        prob = np.zeros((X.shape[0], self.num_classes))
         ### YOUR CODE HERE
+        for i in range(0, X.shape[0]):
+            prob[i] = soft_reg.softmax(np.dot(np.transpose(self.w), X[i]))
         ### END CODE
         return prob
 
