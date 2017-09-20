@@ -81,9 +81,12 @@ def soft_cost(X, Y, W, reg=0.0):
 
     # calc average
     cost /= input_size
+    
+    W_reg = np.insert(W[1:], 0, np.zeros(grad.shape[1]), axis=0)
 
     # regularize cost
-    cost += 0.5 * reg * np.sum(W * W)
+    cost += 0.5 * reg * np.sum(W_reg * W_reg)
+    #cost += 0.5 * reg * np.sum(W * W)
 
     sum_exp_scores = np.sum(exp_scores, axis=0) # sum over columns
     sum_exp_scores = 1.0 / (sum_exp_scores + 1e-8)
@@ -96,7 +99,7 @@ def soft_cost(X, Y, W, reg=0.0):
     grad /= input_size
 
     # regularize gradient
-    grad += reg * W
+    grad += reg * W_reg
     ### END CODE
     return cost, grad
 
@@ -149,8 +152,6 @@ def mini_batch_grad_descent(X, Y, W=None, reg=0.0, lr=0.1, epochs=10, batch_size
             yield X[excerpt], Y[excerpt]
 
     for i in range(0, epochs):
-        #print("Epoch ", i, " in mini_batch_grad_descent")
-        #print("Data dimensions are ", X.shape)
         for batch in generate_minibatches(X, Y, batch_size):
             X_batch, Y_batch = batch
             cost, grad = soft_cost(X_batch, Y_batch, W, reg)
