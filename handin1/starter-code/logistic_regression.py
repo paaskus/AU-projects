@@ -82,9 +82,9 @@ def batch_grad_descent(X, y, w=None, reg=0, lr=1.0, rounds=10):
     if w is None: w = np.zeros(X.shape[1])    
     #lr = 1.0
     ### YOUR CODE HERE
-    for i in range(0, rounds):
-        cost,grad = log_cost(X, y, w, reg)
-        w = w - lr * grad
+    for i in range(rounds):
+        cost, grad = log_cost(X, y, w, reg)
+        w = w - lr * grad # update hypothesis
     ### END CODE
     return w
     
@@ -113,19 +113,16 @@ def mini_batch_grad_descent(X, y, w=None, reg=0, lr=0.1, batch_size=16, epochs=1
     if w is None: w = np.zeros(X.shape[1])
     ### YOUR CODE
     n = X.shape[0]
-    def generate_minibatches(X, y, batch_size):
-        indices = np.arange(n)
-        np.random.shuffle(indices)
-        for i in range(0, n - batch_size + 1, batch_size):
-            excerpt = indices[i:i + batch_size]
-            yield X[excerpt], y[excerpt]
-
-    for i in range(0, epochs):
-        for batch in generate_minibatches(X, y, batch_size):
-            X_batch, y_batch = batch
-            cost,grad = log_cost(X_batch, y_batch, w, reg)
-            grad = 1/batch_size * grad
-            w = w - (lr * grad)
+    batches, remainder = n // batch_size, n % batch_size
+    for i in range(epochs):
+        perm = np.random.permutation(n) # shuffle indices
+        X_rand, y_rand = X[perm], y[perm] # shuffle X and y in unison
+        for j in range(batches):
+            rest = remainder if (j + 1 >= batches) else 0
+            start, end = j*batch_size, j*batch_size + batch_size + rest
+            X_batch, y_batch = X_rand[start:end], y_rand[start:end]
+            cost, grad = log_cost(X_batch, y_batch, w, reg)
+            w = w - lr * grad # update hypothesis
     ### END CODE
     return w
 
