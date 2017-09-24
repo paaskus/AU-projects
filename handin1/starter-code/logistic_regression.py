@@ -5,7 +5,7 @@ import math
 from sklearn.metrics import confusion_matrix
 from h1_util import numerical_grad_check
 
-np.seterr(all='raise')
+np.seterr(all='raise') # do not continue if numerical errors are encountered
 
 def logistic(z):
     """ 
@@ -13,15 +13,13 @@ def logistic(z):
     
     np.exp may come in handy
     Args:
-        z: numpy array shape (d,) 
+        z: numpy array shape (d,)
     Returns:
        logi: numpy array shape (d,) each entry transformed by the logistic function 
     """
     logi = np.zeros(z.shape)
     ### YOUR CODE HERE
-    def sigmoid(x):
-        return 1/(1 + np.exp(-x))
-    logi = np.vectorize(sigmoid)(z)
+    logi = 1/(1 + np.exp(-z) + 0.000000000000001) # avoid returning exactly 1
     ### END CODE
     assert logi.shape == z.shape
     return logi
