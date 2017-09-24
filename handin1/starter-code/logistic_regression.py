@@ -140,6 +140,10 @@ def test_logistic():
     lg = logistic(a)
     target = np.array([ 0.5, 0.73105858, 0.88079708, 0.95257413])
     assert np.allclose(lg, target), 'Logistic Mismatch Expected {0} - Got {1}'.format(target, lg)
+    a = np.array([-1, -2, -3, -4])
+    lg = logistic(a)
+    target = np.array([0.26894142, 0.11920292, 0.04742587, 0.01798620])
+    assert np.allclose(lg, target), 'Logistic Mismatch Expected {0} - Got {1}'.format(target, lg)
     print('Test Success!')
 
 def test_cost():
@@ -150,6 +154,13 @@ def test_cost():
     reg = 0
     cost,_ = log_cost(X,y, w, reg)
     target = -np.log(0.5)
+    assert np.allclose(cost, target), 'Cost Function Error:  Expected {0} - Got {1}'.format(target, cost)
+    X = np.array([[2.0, 3.0, 5.0, 7.0], [9.0, 4.0, 0.0, 11.0]])
+    y = np.array([0, 1], dtype='int64')
+    w = np.array([4.0, 5.0, 3.0, 8.0])
+    reg = 0
+    cost,_ = log_cost(X,y, w, reg)
+    target = 18.3684002848
     assert np.allclose(cost, target), 'Cost Function Error:  Expected {0} - Got {1}'.format(target, cost)
     print('Test Success')
 
