@@ -47,22 +47,19 @@ def log_cost(X, y, w, reg=0):
     cost = 0
     grad = np.zeros(w.shape)
     ### YOUR CODE HERE
-    n = np.array(X).shape[0]
-    def log_likelihood(X, y, w):
-        ll = 0 # log likelihood
-        for i in range(0, n):
-            x = logistic(np.dot(w, X[i]))
-            if y[i] == 1:
-                ll += y[i] * np.log(x)
-            else: # y[i] == 0
-                if x == 1: x = 0.9999999999999999
-                ll += np.log(1-x)
-        return ll
-    nll = - log_likelihood(X, y, w) # negative log likelihood
-    cost = 1/n * nll
-    grad = 1/n * (-np.dot((np.transpose(X)), (y - logistic(np.dot(X, w)))))
-    l2reg = 0.5 * reg * np.sum(np.dot(w[1:], w[1:]))
-    cost += l2reg
+    n = X.shape[0]
+    w_reg = np.insert(w[1:], 0, 0) # do not regularize bias
+    
+    # calculate cost
+    score = logistic(np.dot(X, w))
+    nll = - np.sum(y * np.log(score) + (1-y) * np.log(1 - score)); cost = nll/n
+    
+    # calculate gradient
+    nll_grad = - np.dot(np.transpose(X), y - score); grad = nll_grad/n
+    
+    # regularize
+    cost += 0.5 * reg * np.linalg.norm(w_reg, ord=2)
+    grad += reg * w_reg
     ### END CODE
     assert grad.shape == w.shape
     return cost, grad
