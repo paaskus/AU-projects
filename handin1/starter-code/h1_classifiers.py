@@ -26,6 +26,7 @@ class LogisticClassifierTwoClass(MlModel):
 
         X = np.c_[np.ones(X_.shape[0]), X_] # Add one for bias to the first columns
         ### YOUR CODE HERE
+        print("Training two-class logistic classifier: reg={0}, lr={1}, epochs={2}, batch_size={3}".format(reg, lr, epochs, batch_size))
         self.w = log_reg.mini_batch_grad_descent(X, y, None, reg, lr, batch_size, epochs)
         ### END CODE
         
@@ -62,8 +63,7 @@ class LogisticClassifierTwoClass(MlModel):
         X = np.c_[np.ones(X_.shape[0]), X_] # Add one for bias to the first columns
         probs = np.zeros(X.shape[0])
         ### YOUR CODE HERE
-        for i in range(0, X.shape[0]):
-            probs[i] = log_reg.logistic(np.dot(self.w, X[i]))
+        probs = log_reg.logistic(np.dot(X, self.w))
         ### END CODE
         assert probs.shape == (X.shape[0],)
         return probs
@@ -102,6 +102,7 @@ class LogisticClassifier(MlModel):
         self.classes = np.sort(np.unique(y))
         self.models = []
         ### YOUR CODE HERE 5-10 lines
+        print("Training one-vs-all logistic classifier: reg={0}, lr={1}, epochs={2}, batch_size={3}".format(reg, lr, epochs, batch_size))
         n = X.shape[0]
         for c in self.classes:
             one_vs_all_y = np.zeros(n)
