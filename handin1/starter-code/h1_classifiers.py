@@ -154,7 +154,7 @@ class SoftmaxClassifier(MlModel):
         y_as_matrix[np.arange(y.shape[0]), y] = 1
         X = np.c_[np.ones(X_.shape[0]), X_] # add bias variable 1
         ### YOUR CODE HERE
-        print("Now training Softmax classifier with parameters:", "reg=", reg, ", lr=", lr, ", epochs=", epochs, ", batch_size=", batch_size)
+        print("Training Softmax classifier: reg={0}, lr={1}, epochs={2}, batch_size={3}".format(reg, lr, epochs, batch_size))
         self.w = soft_reg.mini_batch_grad_descent(X, y_as_matrix, None, reg, lr, epochs, batch_size)
         ### END CODE
             
@@ -184,8 +184,7 @@ class SoftmaxClassifier(MlModel):
         X = np.c_[np.ones(X_.shape[0]), X_] # add bias variable 1
         prob = np.zeros((X.shape[0], self.num_classes))
         ### YOUR CODE HERE
-        for i in range(0, X.shape[0]):
-            prob[i] = soft_reg.softmax(np.dot(np.transpose(self.w), X[i]))
+        prob = soft_reg.softmax(np.dot(X, self.w))
         ### END CODE
         return prob
 
@@ -235,17 +234,48 @@ def run_validation(model, X, y, params, val_size=0.2, **kwargs):
     """
     acc = np.zeros(len(params))
     n = y.size
-    val_size = int(n*0.2)
+    val_size = int(n*val_size)
     val_train = X[0:val_size,:]
     val_target = y[0:val_size]
     train = X[val_size+1:,:]
     target = y[val_size+1:]
     acc = np.zeros(len(params))
     ### YOUR CODE HERE 5-10 lines
+    """def generate_validation_set(X, y, batch_size):
+        indices = np.arange(n)
+        np.random.RandomState(2017).shuffle(indices)
+        for i in range(0, n - batch_size + 1, batch_size):
+            excerpt = indices[i:i + batch_size]
+            val_train = X[excerpt]
+            val_target = y[excerpt]
+            train = np.delete(X, excerpt, axis=0)
+            target = np.delete(y, excerpt)
+            yield val_train, val_target, train, target
+            
     for i in range(len(params)):
-        model.train(train, target, reg=params[i])
-        acc[i] = model_accuracy(model, val_train, val_target)
-    model.train(X, y, params[np.argmax(acc)])
+        vc_error = 0
+        for val_train, val_target, train, target in generate_validation_set(X, y, val_size):
+            model.train(train, target, reg=params[i])
+            vc_error += model_accuracy(model, val_train, val_target)
+        acc[i] = vc_error/np.floor(n/val_size) # average
+    model.train(X, y, params[np.argmax(acc)]) # train best model on whole dataset"""
+
+    batches, remainder = n // val_size, n % val_size
+    for i in range(len(params)):
+        perm = np.random.permutation(n) # shuffle indices
+        X_rand = X[perm]
+        y_rand = y[perm] # shuffle X and y in unison
+        vc_error = 0
+        for j in range(batches):
+            rest = remainder if (j + 1 >= batches) else 0
+            start, end = j*val_size, j*val_size + val_size + rest
+            interval = np.s_[start:end]
+            val_train, val_target = X_rand[interval], y_rand[interval]
+            train, target = np.delete(X_rand, interval, axis=0), np.delete(y_rand, interval)
+            model.train(train, target, reg=params[i])
+            vc_error += model_accuracy(model, val_train, val_target)
+        acc[i] = vc_error/np.floor(n/batches) # average
+    model.train(X, y, params[np.argmax(acc)]) # train best model on whole dataset
     ### END CODE
     return model, acc
         
