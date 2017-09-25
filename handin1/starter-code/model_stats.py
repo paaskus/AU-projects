@@ -182,8 +182,10 @@ def best_model(model):
     X_train, y_train =  load_train_data()
     X_test, y_test =  load_test_data()
     params = {}
-    reg = [0]
+    reg = [0, 0.001, 0.0001, 0.00001, 0.000001]
     ### YOUR CODE HERE
+    for i in range(1, 20):
+        reg.append(0.30**i)
     ### END CODE
     reg = sorted(reg)
     model, acc = run_validation(model, X_train, y_train, reg, **params)
