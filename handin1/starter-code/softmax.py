@@ -61,44 +61,17 @@ def soft_cost(X, Y, W, reg=0.0):
     cost = np.nan
     grad = np.zeros(W.shape)*np.nan
     ### YOUR CODE HERE
-    scores = np.dot(X, W)
-    scores -= np.max(scores) # shift by log C to avoid numerical instability
-
-    # matrix of all zeros except for a single wx + log C value in each column that corresponds to the
-    # quantity we need to subtract from each row of scores
-    correct_wx = np.multiply(Y, scores)
-
-    # create a single row of the correct wx_y + log C values for each data point
-    sums_wy = np.sum(correct_wx, axis=0) # sum over each column
-
-    exp_scores = np.exp(scores)
-    sums_exp = np.sum(exp_scores, axis=0) # sum over each column
-    result = np.log(sums_exp)
-
-    result -= sums_wy
-
-    cost = np.sum(result)
-
-    # calc average
-    cost /= input_size
+    W_reg = np.insert(W[1:], 0, np.zeros(grad.shape[1]), axis=0) # do not regularize bias
+    scores = softmax(np.dot(X, W))
     
-    W_reg = np.insert(W[1:], 0, np.zeros(grad.shape[1]), axis=0)
-
-    # regularize cost
-    cost += 0.5 * reg * np.sum(W_reg * W_reg)
-    #cost += 0.5 * reg * np.sum(W * W)
-
-    sum_exp_scores = np.sum(exp_scores, axis=0) # sum over columns
-    sum_exp_scores = 1.0 / (sum_exp_scores + 1e-8)
-
-    grad = exp_scores * sum_exp_scores
-    grad = np.dot(X.T, grad)
-    grad -= np.dot(X.T, Y)
-
-    # calc average
-    grad /= input_size
-
-    # regularize gradient
+    # calculate cost
+    nll = -np.sum(Y * np.log(scores)); cost = nll/input_size
+    
+    # calculate gradient
+    nll_grad = -np.dot(np.transpose(X), Y - scores); grad = nll_grad/input_size
+    
+    # regularization
+    cost += 0.5 * reg * np.sum(W[1:]**2)
     grad += reg * W_reg
     ### END CODE
     return cost, grad
@@ -144,19 +117,17 @@ def mini_batch_grad_descent(X, Y, W=None, reg=0.0, lr=0.1, epochs=10, batch_size
     if W is None: W = np.zeros((X.shape[1],Y.shape[1]))
     ### YOUR CODE HERE
     n = X.shape[0]
-    def generate_minibatches(X, Y, batch_size):
-        indices = np.arange(n)
-        np.random.shuffle(indices)
-        for i in range(0, n - batch_size + 1, batch_size):
-            excerpt = indices[i:i + batch_size]
-            yield X[excerpt], Y[excerpt]
-
-    for i in range(0, epochs):
-        for batch in generate_minibatches(X, Y, batch_size):
-            X_batch, Y_batch = batch
+    batches, remainder = n // batch_size, n % batch_size
+    for i in range(epochs):
+        perm = np.random.permutation(n) # shuffle indices
+        X_rand = X[perm]
+        Y_rand = Y[perm] # shuffle X and y in unison
+        for j in range(batches):
+            rest = remainder if (j + 1 >= batches) else 0
+            start, end = j*batch_size, j*batch_size + batch_size + rest
+            X_batch, Y_batch = X_rand[start:end], Y_rand[start:end]
             cost, grad = soft_cost(X_batch, Y_batch, W, reg)
-            grad = 1/batch_size * grad
-            W = W - (lr * grad)
+            W = W - lr * grad # update hypothesis
     ### END CODE
     return W
 
