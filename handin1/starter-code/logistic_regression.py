@@ -47,9 +47,9 @@ def log_cost(X, y, w, reg=0):
     ### YOUR CODE HERE
     n = X.shape[0]
     w_reg = np.insert(w[1:], 0, 0) # do not regularize bias
+    score = logistic(np.dot(X, w))
     
     # calculate cost
-    score = logistic(np.dot(X, w))
     nll = - np.sum(y * np.log(score) + (1-y) * np.log(1 - score)); cost = nll/n
     
     # calculate gradient
