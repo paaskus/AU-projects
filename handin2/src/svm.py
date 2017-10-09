@@ -32,13 +32,20 @@ def load_model(name):
 ### YOUR CODE HERE
 def cross_validate(X, y, svm_model, parameters):
     # split data into training and validation sets
-    grid_search_model = GridSearchCV(svm_model, parameters, n_jobs=1);
-
-    scores = cross_val_score(svm_model, X, y, cv=5)
-    return scores.mean()
+    grid_search_model = GridSearchCV(svm_model, parameters, n_jobs=-1)
+    grid_search_model = grid_search_model.fit(X, y)
+    return grid_search_model.cv_results_
 
 def print_score(score, kernel):
-    print("Accuracy for {0} kernel: {1}".format(kernel, score))
+    # Create a DataFrame object using the cross validation result and filter out the 
+    # relevant information. Finally display/print it. 
+    dataframe = pd.DataFrame(score) 
+    relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'param_C', 'param_coef0', 'param_gamma', 'mean_fit_time']).sort_values(['mean_test_score'])
+    display(relevant)
+
+    # Save the data to a file, then load it again and print it. 
+    filename = 'results/svc_rbf.csv'
+    relevant.to_csv(filename, index=False)
 
 ### END CODE
 
@@ -61,8 +68,8 @@ if __name__=="__main__":
     rp = np.random.permutation(au_train_labels.size)
     digs = au_train_images[rp,:]
     labs = au_train_labels[rp]
-    digs = digs[0:1000, :]
-    labs = labs[0:1000]
+    digs = digs[0:2000, :]
+    labs = labs[0:2000]
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-lin', action='store_true', default=False)
@@ -73,13 +80,20 @@ if __name__=="__main__":
     if args.lin:
         print('running linear svm')
         ### YOUR CODE HERE
-        svm_model = svm.SVC(kernel='linear', C=1, decision_function_shape="ovr") # Note that ovr is default we only write to make it clear here.
+        parameters = {
+            'C': [1, 10, 100, 1000, 10000, 1000000]
+        }
+        svm_model = svm.SVC(kernel='linear') # Note that ovr is default we only write to make it clear here.
         score = cross_validate(digs, labs, svm_model, parameters)
         print_score(score, "linear")
         ### END CODE
     if args.poly2:
         print('running poly 2 svm')
         ### YOUR CODE HERE
+        parameters = {
+            'C': [1, 10, 100, 1000],
+            'coef0': [0.01, 0.1, 1, 10, 100]
+        }
         svm_model = svm.SVC(kernel='poly', degree=2, C=1, decision_function_shape="ovr") # Note that ovr is default we only write to make it clear here.
         score = cross_validate(digs, labs, svm_model, parameters)
         print_score(score, "poly 2")
@@ -87,6 +101,10 @@ if __name__=="__main__":
     if args.poly3:
         print('running poly 3 svm')
         #### YOUR CODE HERE
+        parameters = {
+            'C': [1, 10, 100, 1000],
+            'coef0': [0.01, 0.1, 1, 10, 100]
+        }
         svm_model = svm.SVC(kernel='poly', degree=3, C=1, decision_function_shape="ovr") # Note that ovr is default we only write to make it clear here.
         score = cross_validate(digs, labs, svm_model, parameters)
         print_score(score, "poly 3")
@@ -94,7 +112,11 @@ if __name__=="__main__":
     if args.rbf:
         print('running rbf svm')
         ### YOUR CODE HERE
-        svm_model = svm.SVC(kernel='rbf', C=1, decision_function_shape="ovr") # Note that ovr is default we only write to make it clear here.
+        parameters = {
+            'C': [1, 10, 100, 200, 1000],
+            'gamma': [0.008, 0.009, 0.01, 0.1, 1]
+        }
+        svm_model = svm.SVC(kernel='rbf') # Note that ovr is default we only write to make it clear here.
         score = cross_validate(digs, labs, svm_model, parameters)
         print_score(score, "rbf")
         ### END CODE
