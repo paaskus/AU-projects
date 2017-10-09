@@ -1,5 +1,5 @@
 from sklearn import svm
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, cross_val_score
 import numpy as np
 import pandas as pd
 import os
@@ -30,6 +30,14 @@ def load_model(name):
 
 
 ### YOUR CODE HERE
+def cross_validate(X, y, svm_model):
+    # split data into training and validation sets
+    scores = cross_val_score(svm_model, X, y, cv=5)
+    return scores.mean()
+
+def print_score(score, kernel):
+    print("Accuracy for {0} kernel: {1}".format(kernel, score))
+    
 ### END CODE
 
 if __name__=="__main__":
@@ -63,18 +71,30 @@ if __name__=="__main__":
     if args.lin:
         print('running linear svm')
         ### YOUR CODE HERE
+        svm_model = svm.SVC(kernel='linear', C=1, decision_function_shape="ovr") # Note that ovr is default we only write to make it clear here.
+        score = cross_validate(digs, labs, svm_model)
+        print_score(score, "linear")
         ### END CODE        
     if args.poly2:
         print('running poly 2 svm')
         ### YOUR CODE HERE
+        svm_model = svm.SVC(kernel='poly', degree=2, C=1, decision_function_shape="ovr") # Note that ovr is default we only write to make it clear here.
+        score = cross_validate(digs, labs, svm_model)
+        print_score(score, "poly 2")
         ### END CODE
     if args.poly3:
         print('running poly 3 svm')
         #### YOUR CODE HERE
+        svm_model = svm.SVC(kernel='poly', degree=3, C=1, decision_function_shape="ovr") # Note that ovr is default we only write to make it clear here.
+        score = cross_validate(digs, labs, svm_model)
+        print_score(score, "poly 3")
         ### END CODE
     if args.rbf:
         print('running rbf svm')
         ### YOUR CODE HERE
+        svm_model = svm.SVC(kernel='rbf', C=1, decision_function_shape="ovr") # Note that ovr is default we only write to make it clear here.
+        score = cross_validate(digs, labs, svm_model)
+        print_score(score, "rbf")
         ### END CODE
         
 
