@@ -56,7 +56,7 @@ def log_cost(X, y, w, reg=0):
     nll_grad = - np.dot(np.transpose(X), y - score); grad = nll_grad/n
     
     # regularize
-    cost += 0.5 * reg * np.linalg.norm(w_reg, ord=2)
+    cost += 0.5 * reg * np.linalg.norm(w_reg, ord=2)**2
     grad += reg * w_reg
     ### END CODE
     assert grad.shape == w.shape
@@ -152,13 +152,6 @@ def test_cost():
     reg = 0
     cost,_ = log_cost(X,y, w, reg)
     target = -np.log(0.5)
-    assert np.allclose(cost, target), 'Cost Function Error:  Expected {0} - Got {1}'.format(target, cost)
-    X = np.array([[2.0, 3.0, 5.0, 7.0], [9.0, 4.0, 0.0, 11.0]])
-    y = np.array([0, 1], dtype='int64')
-    w = np.array([4.0, 5.0, 3.0, 8.0])
-    reg = 0
-    cost,_ = log_cost(X,y, w, reg)
-    target = 18.3684002848
     assert np.allclose(cost, target), 'Cost Function Error:  Expected {0} - Got {1}'.format(target, cost)
     print('Test Success')
 

@@ -274,7 +274,7 @@ def run_validation(model, X, y, params, val_size=0.2, **kwargs):
             train, target = np.delete(X_rand, interval, axis=0), np.delete(y_rand, interval)
             model.train(train, target, reg=params[i])
             vc_error += model_accuracy(model, val_train, val_target)
-        acc[i] = vc_error/np.floor(n/batches) # average
+        acc[i] = vc_error/batches # average
     model.train(X, y, params[np.argmax(acc)]) # train best model on whole dataset
     ### END CODE
     return model, acc

@@ -130,8 +130,8 @@ def make_logreg_statistics():
     display(df_pairwise_train)
     print('Pairwise Test Accuract')
     display(df_pairwise_test)
-    export_dataframe('pairwise_train_accuracy.csv', df_pairwise_train)
-    export_dataframe('pairwise_test_accuracy.csv', df_pairwise_test)
+    export_dataframe('pairwise_train_accuracy.csv', df_pairwise_train.round(4))
+    export_dataframe('pairwise_test_accuracy.csv', df_pairwise_test.round(4))
     
     print('Training full model with all vs one')
     full_model = LogisticClassifier()
