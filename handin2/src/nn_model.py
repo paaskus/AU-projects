@@ -57,10 +57,10 @@ class FeedForwardModel(TfModel):
         (Don't change the variable names)
         """
         ### YOUR CODE HERE
-        self.input_placeholder = tf.placeholder(tf.float(32), shape=[None, n_features])
-        self.labels_placeholder = tf.placeholder(tf.int(32), shape=[None,])
-        self.dropout_placeholder = tf.placeholder(tf.float(32))
-        self.weight_decay_placeholder = tf.placeholder(tf.float(32))
+        self.input_placeholder = tf.placeholder(tf.float32, shape=[None, self.config.n_features])
+        self.labels_placeholder = tf.placeholder(tf.int32, shape=[None,])
+        self.dropout_placeholder = tf.placeholder(tf.float32)
+        self.weight_decay_placeholder = tf.placeholder(tf.float32)
         ### END CODE
 
     def create_feed_dict(self, inputs_batch, labels_batch=None, weight_decay = 0, dropout=1):
@@ -87,9 +87,9 @@ class FeedForwardModel(TfModel):
 
         feed_dict = {}
         ### YOUR CODE HERE
-        feed_dict = {input_placeholder: inputs_batch, dropout_placeholder: dropout, weight_decay_placeholder: weight_decay}
-        if (labels_batch != None):
-            feed_dict["labels_placeholder"] = labels_batch
+        feed_dict = {self.input_placeholder: inputs_batch, self.dropout_placeholder: dropout, self.weight_decay_placeholder: weight_decay}
+        if (not (labels_batch is None)):
+            feed_dict[self.labels_placeholder] = labels_batch
         ### END CODE
         return feed_dict
 
@@ -138,17 +138,20 @@ class FeedForwardModel(TfModel):
         self.U = tf.Variable(xavier_initializer(Ushape));
 
         b1 = tf.zeros([self.config.hidden_size])
-        b2 = tf.zeros([self.config.hidden_size])
+        b2 = tf.zeros([self.config.n_classes])
 
         # 2: Calculate the following
-        
+
         # h = Relu(xW + b1) - hidden layer
-        features = tf.matmul(x, W) + b1
+
+        features = tf.matmul(x, self.W) + b1
         h = tf.nn.relu(features)
+
         # h_drop = Dropout(h, dropout_rate) - use dropout
         h_drop = tf.nn.dropout(h, self.dropout_placeholder)
+
         # pred = h_dropU + b2 - output layer
-        pred = tf.matmul(h_drop, U) + b2
+        pred = tf.matmul(h_drop, self.U) + b2
 
         ### END CODE
         return pred
@@ -161,7 +164,7 @@ class FeedForwardModel(TfModel):
         You should use tf.nn.sparse_softmax_cross_entropy_with_logits to simplify your
         implementation. You might find tf.reduce_mean useful.
 
-        loss = sum(softmax_loss) + self.weight_decay_placeholder * (sum_{i,j} W_{i,j}^2 + \sum_{i,j} U_{i,j}^2)
+        loss = sum(softmax_loss) + self.weight_decay_placeholder * (\sum_{i,j} W_{i,j}^2 + \sum_{i,j} U_{i,j}^2)
         Args:
             pred: A tensor of shape (batch_size, n_classes) containing the output of the neural
                   network before the softmax layer.
@@ -170,6 +173,13 @@ class FeedForwardModel(TfModel):
             loss: A 0-d tensor (scalar)
         """
         ### YOUR CODE HERE
+        # 1: Calculate softmax_loss
+        softmax_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=self.labels_placeholder, logits=pred) # NB! We are not completely sure about this!
+
+        # 2: Calculate loss according to: "loss = sum(softmax_loss) + self.weight_decay_placeholder * (\sum_{i,j} W_{i,j}^2 + \sum_{i,j} U_{i,j}^2)"
+        #We might need to use reduce_sum instead (on W and U) to get the proper average
+        loss = tf.reduce_mean(softmax_loss)
+        reg = self.weight_decay_placeholder * (tf.reduce_sum(self.W ** 2) + tf.reduce_sum(self.U ** 2))
         ### END CODE
         return loss + reg
 
@@ -192,6 +202,9 @@ class FeedForwardModel(TfModel):
             train_op: The Op for training.
         """
         ### YOUR CODE HERE
+        optimizer = tf.train.AdamOptimizer()
+        train_op = optimizer.minimize(loss)
+
         ### END CODE
         return train_op
 
