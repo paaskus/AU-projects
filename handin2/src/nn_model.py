@@ -127,10 +127,29 @@ class FeedForwardModel(TfModel):
         """
 
         xavier_initializer = tf.contrib.layers.xavier_initializer()
+
         Wshape = (self.config.n_features, self.config.hidden_size)
         self.W = tf.Variable(xavier_initializer(Wshape))
         x = self.input_placeholder
         ### YOUR CODE HERE
+
+        # 1: Initialize  W, b1, U, b2
+        Ushape = (self.config.hidden_size, self.config.n_classes)
+        self.U = tf.Variable(xavier_initializer(Ushape));
+
+        b1 = tf.zeros([self.config.hidden_size])
+        b2 = tf.zeros([self.config.hidden_size])
+
+        # 2: Calculate the following
+        
+        # h = Relu(xW + b1) - hidden layer
+        features = tf.matmul(x, W) + b1
+        h = tf.nn.relu(features)
+        # h_drop = Dropout(h, dropout_rate) - use dropout
+        h_drop = tf.nn.dropout(h, self.dropout_placeholder)
+        # pred = h_dropU + b2 - output layer
+        pred = tf.matmul(h_drop, U) + b2
+
         ### END CODE
         return pred
 
