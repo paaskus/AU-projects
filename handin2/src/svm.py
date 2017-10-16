@@ -40,12 +40,22 @@ def print_score(score, kernel):
     # Create a DataFrame object using the cross validation result and filter out the
     # relevant information. Finally display/print it.
     dataframe = pd.DataFrame(score)
-    relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'param_C', 'param_coef0', 'param_gamma', 'mean_fit_time']).sort_values(['mean_test_score'])
+    dataframe.round(5);
+    # 'mean_fit_time' is omitted since I deem it irrelevant
+    relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'param_C', 'param_coef0', 'param_gamma']).sort_values(['mean_test_score'])
     display(relevant)
 
     # Save the data to a file, then load it again and print it.
     filename = 'results/' + kernel + '.csv'
-    relevant.to_csv(filename, index=False)
+    headers = ['Mean test score', 'Mean train score', 'Std test score', 'Std train score', 'C']
+    if (kernel == "poly 2" or kernel == "poly 3"):
+        headers.append("coef0");
+
+    if (kernel == "rbf"):
+        headers.append("gamma");
+
+
+    relevant.to_csv(filename, index=False, float_format='%.5f', header=headers)
 
 ### END CODE
 
