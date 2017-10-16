@@ -37,14 +37,14 @@ def cross_validate(X, y, svm_model, parameters):
     return grid_search_model.cv_results_
 
 def print_score(score, kernel):
-    # Create a DataFrame object using the cross validation result and filter out the 
-    # relevant information. Finally display/print it. 
-    dataframe = pd.DataFrame(score) 
+    # Create a DataFrame object using the cross validation result and filter out the
+    # relevant information. Finally display/print it.
+    dataframe = pd.DataFrame(score)
     relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'param_C', 'param_coef0', 'param_gamma', 'mean_fit_time']).sort_values(['mean_test_score'])
     display(relevant)
 
-    # Save the data to a file, then load it again and print it. 
-    filename = 'results/svc_rbf.csv'
+    # Save the data to a file, then load it again and print it.
+    filename = 'results/' + kernel + '.csv'
     relevant.to_csv(filename, index=False)
 
 ### END CODE
