@@ -87,6 +87,9 @@ class FeedForwardModel(TfModel):
 
         feed_dict = {}
         ### YOUR CODE HERE
+        feed_dict = {input_placeholder: inputs_batch, dropout_placeholder: dropout, weight_decay_placeholder: weight_decay}
+        if (labels_batch != None):
+            feed_dict["labels_placeholder"] = labels_batch
         ### END CODE
         return feed_dict
 
