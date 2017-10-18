@@ -88,7 +88,9 @@ class FeedForwardModel(TfModel):
         feed_dict = {}
         ### YOUR CODE HERE
         feed_dict = {self.input_placeholder: inputs_batch, self.dropout_placeholder: dropout, self.weight_decay_placeholder: weight_decay}
-        if (not (labels_batch is None)):
+
+        # TODO: In principle, they could all be none. Consider making a check here for each of them!
+        if not labels_batch is None:
             feed_dict[self.labels_placeholder] = labels_batch
         ### END CODE
         return feed_dict
@@ -143,7 +145,6 @@ class FeedForwardModel(TfModel):
         # 2: Calculate the following
 
         # h = Relu(xW + b1) - hidden layer
-
         features = tf.matmul(x, self.W) + b1
         h = tf.nn.relu(features)
 
