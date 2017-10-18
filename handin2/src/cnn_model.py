@@ -196,10 +196,10 @@ class ConvolutionalModel(TfModel):
 
         #Initialize remaining variables
         Wshape = (self.config.conv_output_size, self.config.hidden_size)
-        self.W = xavier_init(Wshape)
+        self.W = tf.Variable(xavier_init(Wshape))
 
         Ushape = (self.config.hidden_size, self.config.n_classes)
-        self.U = xavier_init(Ushape)
+        self.U = tf.Variable(xavier_init(Ushape))
 
         b3 = tf.zeros(self.config.hidden_size)
         b4 = tf.zeros(self.config.n_classes)
