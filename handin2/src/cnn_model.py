@@ -24,6 +24,7 @@ class Config(object):
 
     ### YOUR CODE HERE
     tensor_dimensions = 4
+    conv_output_size = 7 * 7 * 64
     ### END CODE
     hidden_size = 1024
     dropout = 0.5 #
@@ -79,6 +80,7 @@ class ConvolutionalModel(TfModel):
         ### END CODE
 
     def create_feed_dict(self, inputs_batch, labels_batch=None, weight_decay = 0, dropout=1):
+        # print("Length of inputs_batch: {0}".format(len(inputs_batch)))
         """Creates the feed_dict for the neural net.
 
         A feed_dict takes the form of:
@@ -105,6 +107,10 @@ class ConvolutionalModel(TfModel):
 
         # TODO: In principle, they could all be none. Consider making a check here for each of them!
         if not labels_batch is None:
+            # print("Length of labels_batch: {0}".format(len(labels_batch)))
+            # if len(labels_batch) < 32:
+            #     print("Not enough labels case")
+            #     labels_batch = np.zeros(32)
             feed_dict[self.labels_placeholder] = labels_batch
         ### END CODE
         return feed_dict
@@ -167,35 +173,33 @@ class ConvolutionalModel(TfModel):
         ### YOUR CODE HERE
 
         #Initialize variable
+        C1 = tf.Variable(xavier_init(self.config.conv_layers[0]))
+        C2 = tf.Variable(xavier_init(self.config.conv_layers[1]))
 
-        C1 = tf.Variable(tf.contrib.layers.xavier_initializer()(self.config.conv_layers[0].shape))
-        C2 = tf.Variable(tf.contrib.layers.xavier_initializer()(self.config.conv_layers[1].shape))
-
-        b1 = tf.zeros(C1.shape)
-        b2 = tf.zeros(C2.shape)
+        b1 = tf.zeros(32)
+        b2 = tf.zeros(64)
 
         #Do convolution
 
         #Calculate l1
-        convL1 = tf.nn.conv2d(input=self.input_placeholder, filter=C1, strides=tf.ones(self.config.tensor_dimensions), padding="SAME")
+        convL1 = tf.nn.conv2d(input=x_image, filter=C1, strides=[1, 1, 1, 1], padding="SAME")
         reluConvL1 = tf.nn.relu(convL1 + b1)
-        l1 = tf.nn.max_pool(value=reluConvL1, ksize=self.config.pool_sizes, strides=self.config.pool_sizes, padding="SAME")
+        l1 = tf.nn.max_pool(value=reluConvL1, ksize=[1, self.config.pool_sizes[0], self.config.pool_sizes[1], 1], strides=[1, self.config.pool_sizes[0], self.config.pool_sizes[1], 1], padding="SAME")
 
         #Calculate l2
-        convL2 = tf.nn.conv2d(input=l1, filter=C2, strides=tf.ones(self.config.tensor_dimensions), padding="SAME")
+        convL2 = tf.nn.conv2d(input=l1, filter=C2, strides=[1, 1, 1, 1], padding="SAME")
         reluConvL2 = tf.nn.relu(convL2 + b2)
-        l2 = tf.nn.max_pool(value=reluConvL2, ksize=self.config.pool_sizes, strides=self.config.pool_sizes, padding="SAME")
+        l2 = tf.nn.max_pool(value=reluConvL2, ksize=[1, self.config.pool_sizes[0], self.config.pool_sizes[1], 1], strides=[1, self.config.pool_sizes[0], self.config.pool_sizes[1], 1], padding="SAME")
 
         # NB! This might be faulty
-        self.config.conv_output_size = l2
-        f = tf.reshape(C2, [-1, self.config.conv_output_size])
+        f = tf.reshape(l2, [-1, self.config.conv_output_size])
 
         #Initialize remaining variables
-        #Wshape = (self.config.conv_output_size, self.config.hidden_size)
-        self.W = tf.contrib.layers.xavier_initializer()
+        Wshape = (self.config.conv_output_size, self.config.hidden_size)
+        self.W = xavier_init(Wshape)
 
-        #Ushape = (self.config.hidden_size, self.config.n_classes)
-        self.U = tf.contrib.layers.xavier_initializer()
+        Ushape = (self.config.hidden_size, self.config.n_classes)
+        self.U = xavier_init(Ushape)
 
         b3 = tf.zeros(self.config.hidden_size)
         b4 = tf.zeros(self.config.n_classes)
