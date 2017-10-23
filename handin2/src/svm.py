@@ -42,12 +42,12 @@ def print_score(score, kernel):
     dataframe = pd.DataFrame(score)
     dataframe.round(5);
     # 'mean_fit_time' is omitted since I deem it irrelevant
-    relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'param_C', 'param_coef0', 'param_gamma']).sort_values(['mean_test_score'])
+    relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'mean_fit_time', 'param_C', 'param_coef0', 'param_gamma']).sort_values(['mean_test_score'])
     display(relevant)
 
     # Save the data to a file, then load it again and print it.
     filename = 'results/' + kernel + '.csv'
-    headers = ['Mean test score', 'Mean train score', 'Std test score', 'Std train score', 'C']
+    headers = ['Mean test score', 'Mean train score', 'Std test score', 'Std train score', 'Mean fit time', 'C']
     if (kernel == "poly 2" or kernel == "poly 3"):
         headers.append("coef0");
 
