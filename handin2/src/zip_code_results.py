@@ -34,6 +34,7 @@ results = []
 # CHANGE your_best_classifier_weight_filename to your file - all files with that prefix in model_weights are included
 your_best_classifier_weight_filename = 'nn_h256_THE_BEAST.weight'
 ### YOUR CODE HERE
+your_best_classifier_weight_filename = 'cnn_h1024.weight'
 ### END CODE
 
            
