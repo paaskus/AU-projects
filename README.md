@@ -7,8 +7,8 @@ This is only a limited-functionality prototype. Data analysis was made using the
 
 # How to use
 **Requires Python 3.**
-`cd` into the `app` folder.
-Run `python server.py`.
-Open `http://localhost:5000` in a browser -- this is the only URL that will work.
+1. `cd` into the `app` folder.
+2. Run `python server.py`.
+3. Open `http://localhost:5000` in a browser -- this is the only URL that will work.
 
 You can select any (or none) of the filters and click "Generate result" to see some graphs. Some of the available buttons have no functionality -- they are just dummy objects. 
