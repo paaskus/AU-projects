@@ -1,13 +1,17 @@
 from flask import Flask, jsonify, render_template, request, Response
 import data_crunching.simple_general_analysis as sga
 import json
+import os
+from pathlib import Path
 
 app = Flask(__name__, static_folder='static', static_url_path='')
 
 @app.route('/get-result', methods=['POST'])
 def get_result():
     filters = json.dumps(request.get_json())
-    path_to_data = '~/JPdatatool/JPdata/jyllandsposten_20170402-20170402_18014v2.tsv'
+    direcory_path = os.path.dirname(os.path.realpath(__file__))
+    filename = "sample_data_5000.tsv"
+    path_to_data = f'{direcory_path}/../data/{filename}'
     result = sga.crunch_the_data(path_to_data, filters)
     return Response(result, mimetype='application/json')
 

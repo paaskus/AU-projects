@@ -1,3 +1,5 @@
+import os
+
 # takes a DataFrame and discards all empty rows (where all attributes are empty)
 def __discard_empty_rows(data):
     return data.dropna(axis=0, how='all')
@@ -22,7 +24,7 @@ def filter_data(data, filter_options_string):
         result = result[result[filter_name].isin(selected)]
     
     # output result to .csv, if user wants the raw, filtered data
-    # result.to_csv('~/JPdatatool/app/static/filtered_result.csv')    
+    # result.to_csv('path_to_folder/filtered_result.csv')    
     
     return result
 
@@ -148,8 +150,8 @@ def crunch_the_data(path_to_data, filter_options):
 
 def test():
     filter_options = '{"filters":[]}'
-    result = crunch_the_data('~/JPdatatool/JPdata/jyllandsposten_20170402-20170402_18014v2.tsv', filter_options)
+    path = os.path.dirname(os.path.realpath(__file__))+"/../../data/sample_data_5000.tsv"
+    result = crunch_the_data(path, filter_options)
     print(result)
     return result
-
 
