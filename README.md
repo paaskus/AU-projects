@@ -3,7 +3,7 @@ EkspSys-project 2017.
 
 Simple data analysis tool made specifically for the Danish newspaper Jyllands-Posten, based on their needs.
 
-This is only a limited-functionality prototype. Data analysis was made using the Python (Pandas)[http://pandas.pydata.org/] library. Server functionality implemented using (Flask)[http://flask.pocoo.org/]. Frontend made using HTML/CSS/JavaScript with the libraries (jQuery)[https://jquery.com/] and (D3.js)[https://d3js.org/].
+This is only a limited-functionality prototype. Data analysis was made using the Python [Pandas](http://pandas.pydata.org/) library. Server functionality implemented using [Flask](http://flask.pocoo.org/). Frontend made using HTML/CSS/JavaScript with the libraries [jQuery](https://jquery.com/) and [D3.js](https://d3js.org/).
 
 # How to use
 **Requires Python 3.**
