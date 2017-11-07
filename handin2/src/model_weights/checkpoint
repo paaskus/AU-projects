@@ -1,0 +1,2 @@
+model_checkpoint_path: "/Users/niklasnorregaard/Google Drev/Datalogi/Kandidat/Ottende semester/Machine Learning/AUMachineLearning2017/handin2/src/model_weights/cnn_h1024.weight"
+all_model_checkpoint_paths: "/Users/niklasnorregaard/Google Drev/Datalogi/Kandidat/Ottende semester/Machine Learning/AUMachineLearning2017/handin2/src/model_weights/cnn_h1024.weight"
