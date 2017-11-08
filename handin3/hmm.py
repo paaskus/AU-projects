@@ -81,17 +81,18 @@ emission_probs_3_state = [
 
 hmm_3_state = hmm(init_probs_3_state, trans_probs_3_state, emission_probs_3_state)
 
+#TODO: Consider using (numpy) filters for efficiency
 def validate_hmm(model):
     if math.fsum(model.init_probs) != 1: return False
-    
+
     for num in model.init_probs:
         if num < 0 or num > 1: return False
-            
+
     for row in model.trans_probs:
         if math.fsum(row) != 1: return False
         for num in row:
             if num < 0 or num > 1: return False
-            
+
     for row in model.emission_probs:
         if (math.fsum(row) != 1): return False
         for num in row:
@@ -116,16 +117,22 @@ def log(x):
     return math.log(x)
 
 def joint_prob_log(model, x, z):
+    #Consider using numpy arrays for increased precision
     z_indices = translate_path_to_indices(z)
     x_indices = translate_observations_to_indices(x)
 
-    prob = model.init_probs[z_indices[0]]
+    #Multiplied with first emission probability as seen in Alexanders slides
+    prob = model.init_probs[z_indices[0]] * model.emission_probs[z_indices[0], x_indices[0]];
 
     for i in range(1, len(z_indices)):
+        #This is true according to Alexanders slides
         prob *= model.trans_probs[z_indices[i-1]][z_indices[i]]
 
+    #The upper bound should not matter since
     for i in range(0, len(x_indices)):
-        prob *= model.emission_probs[x_indices[i]][z_indices[i]]
+        #Reversed ordering as seen in Alexanders slides to: z_indices, x_indices.
+        #Consider whether that is true or not
+        prob *= model.emission_probs[z_indices[i]][x_indices[i]]
 
     print(prob)
 
@@ -134,10 +141,10 @@ def joint_prob_log(model, x, z):
 for i in range(0, len(x_long), 100):
     x = x_long[:i]
     z = z_long[:i]
-    
+
     x_trans = translate_observations_to_indices(x)
     z_trans = translate_path_to_indices(z)
-    
+
     # Make your experiment here...
 
 def make_table(m, n):
@@ -147,12 +154,12 @@ def make_table(m, n):
 def compute_w(model, x):
     k = len(model.init_probs)
     n = len(x)
-    
+
     w = make_table(k, n)
-    
+
     # Base case: fill out w[i][0] for i = 0..k-1
     # ...
-    
+
     # Inductive case: fill out w[i][j] for i = 0..k, j = 0..n-1
     # ...
 
