@@ -166,6 +166,15 @@ def compute_w(model, x):
 def opt_path_prob(w):
     pass
 
+
+#Notes for Viterbi decoding:
+# 1: Given a model, find a Z that maximizes the probability of Z given X (the observations) and the model
+# 2: Is calculated based on the recursive which we have seen in the lecture (and dynamic programming)
+# 3: Base case p(z1) * p(x1 | z1) (this is the "bottom") of the pyramid. It corresponds to the first column in the (emission probability) table
+    # NB!!! DO THAT FOR EACH Z
+# 4: Now, for each state, we multiply the probability that we emit the given symbol in our state given all the previous transistions
+    # Again, do that for each Z and multiply that by the maximum value of the previous state multiplied by the transistion probability to our state
+
 # Test implementation
 w = compute_w(hmm_7_state, translate_observations_to_indices(x_short))
 opt_path_prob(w)
