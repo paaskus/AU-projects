@@ -131,7 +131,7 @@ def joint_prob_log(model, x, z):
     #The upper bound should not matter since
     for i in range(0, len(x_indices)):
         #Reversed ordering as seen in Alexanders slides to: z_indices, x_indices.
-        #Consider whether that is true or not
+        #Seems right since the row is the hidden states and the columns are the observations (indexing row and the column)
         prob *= model.emission_probs[z_indices[i]][x_indices[i]]
 
     print(prob)
