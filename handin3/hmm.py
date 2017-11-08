@@ -167,13 +167,17 @@ def opt_path_prob(w):
     pass
 
 
+#Notes for log transform:
+#Use the rule that the logarithm of a product is the same as the logarithm of the first term plus the logarithm of the second term
+
 #Notes for Viterbi decoding:
 # 1: Given a model, find a Z that maximizes the probability of Z given X (the observations) and the model
 # 2: Is calculated based on the recursive which we have seen in the lecture (and dynamic programming)
 # 3: Base case p(z1) * p(x1 | z1) (this is the "bottom") of the pyramid. It corresponds to the first column in the (emission probability) table
     # NB!!! DO THAT FOR EACH Z
 # 4: Now, for each state, we multiply the probability that we emit the given symbol in our state given all the previous transistions
-    # Again, do that for each Z and multiply that by the maximum value of the previous state multiplied by the transistion probability to our state
+    # Again, do that for each Z and multiply that by the maximum value of the previous state multiplied by the transistion probability from that state to our state to our state
+    # For this implementation, see slides for D 27/10 slide 5 (https://blackboard.au.dk/bbcswebdav/pid-1060304-dt-content-rid-3159111_1/courses/BB-Cou-UUVA-67943/HMM-Slides/ml-3-hmm-implementations.pdf)
 
 # Test implementation
 w = compute_w(hmm_7_state, translate_observations_to_indices(x_short))
