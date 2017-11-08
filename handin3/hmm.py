@@ -179,6 +179,10 @@ def opt_path_prob(w):
     # Again, do that for each Z and multiply that by the maximum value of the previous state multiplied by the transistion probability from that state to our state to our state
     # For this implementation, see slides for D 27/10 slide 5 (https://blackboard.au.dk/bbcswebdav/pid-1060304-dt-content-rid-3159111_1/courses/BB-Cou-UUVA-67943/HMM-Slides/ml-3-hmm-implementations.pdf)
 
+#Notes for scope:
+#Ignore posterior decoding in the practical exercises for week 9
+#Ignore everything past "training by counting" in the practical exercises for week 10 (we need training by counting, however)
+
 # Test implementation
 w = compute_w(hmm_7_state, translate_observations_to_indices(x_short))
 opt_path_prob(w)
