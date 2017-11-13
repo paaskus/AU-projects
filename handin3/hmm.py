@@ -153,7 +153,7 @@ def joint_prob_log(model, x, z):
         #Reversed ordering as seen in Alexanders slides to: z_indices, x_indices.
         #Seems right since the row is the hidden states and the columns are the observations (indexing row and the column)
         prob += log(model.emission_probs[z_indices[i]][x_indices[i]])
-    print(prob)
+
     return prob
 
 # Your code here ...
@@ -178,10 +178,21 @@ def compute_w(model, x):
     w = make_table(k, n)
 
     # Base case: fill out w[i][0] for i = 0..k-1
-    # ...
+    for i in range(0, (k - 1))
+        w[i][0] = model.init_probs[i] * model.emission_probs[z_indices[i], x_indices[i]]
 
-    # Inductive case: fill out w[i][j] for i = 0..k, j = 0..n-1
-    # ...
+    # Inductive case: fill out w[j][i] for i = 0..n-1, j = 0..k-1
+
+    for i in range(1, (n - 1))
+        # Find max in column
+        max_w = 0
+        for j in range(0, (k - 1)):
+            max_w = max(max_w, w[j][i - 1])
+
+        for j in range(0, (k - 1)):
+            w[j][i] = max_w * model.trans_probs[z_indices[i-1]][z_indices[i]]
+
+    return w
 
 def opt_path_prob(w):
     pass
