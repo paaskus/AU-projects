@@ -182,7 +182,7 @@ def compute_w(model, x):
     # Base case: fill out w[i][0] for i = 0..k-1
     for i in range(0, (k - 1)):
         #Perhaps we need to use x_indices and perhaps we need to use i
-        w[i][0] = model.init_probs[i] * model.emission_probs[i][x_indices[0]]
+        w[i][0] = log(model.init_probs[i]) + log(model.emission_probs[i][x_indices[0]])
 
     # Inductive case: fill out w[j][i] for i = 0..n-1, j = 0..k-1
 
@@ -193,10 +193,12 @@ def compute_w(model, x):
         for j in range(0, (k - 1)):
             if(max(max_w, w[j][i - 1]) > max_w):
                 previous_state = j
+
+                #This has already been logged
                 max_w = w[j][i - 1]
 
         for j in range(0, (k - 1)):
-            w[j][i] = max_w * model.trans_probs[previous_state][j] * model.emission_probs[j][x_indices[i]]
+            w[j][i] = max_w + log(model.trans_probs[previous_state][j]) + log(model.emission_probs[j][x_indices[i]])
 
     return w
 
