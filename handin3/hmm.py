@@ -175,22 +175,28 @@ def compute_w(model, x):
     k = len(model.init_probs)
     n = len(x)
 
+    x_indices = translate_observations_to_indices(x) # I am not sure we need this
+
     w = make_table(k, n)
 
     # Base case: fill out w[i][0] for i = 0..k-1
-    for i in range(0, (k - 1))
-        w[i][0] = model.init_probs[i] * model.emission_probs[z_indices[i], x_indices[i]]
+    for i in range(0, (k - 1)):
+        #Perhaps we need to use x_indices and perhaps we need to use i
+        w[i][0] = model.init_probs[i] * model.emission_probs[i][x_indices[0]]
 
     # Inductive case: fill out w[j][i] for i = 0..n-1, j = 0..k-1
 
-    for i in range(1, (n - 1))
+    for i in range(1, (n - 1)):
         # Find max in column
         max_w = 0
+        previous_state = 0
         for j in range(0, (k - 1)):
-            max_w = max(max_w, w[j][i - 1])
+            if(max(max_w, w[j][i - 1]) > max_w):
+                previous_state = j
+                max_w = w[j][i - 1]
 
         for j in range(0, (k - 1)):
-            w[j][i] = max_w * model.trans_probs[z_indices[i-1]][z_indices[i]]
+            w[j][i] = max_w * model.trans_probs[previous_state][j] * model.emission_probs[j][x_indices[i]]
 
     return w
 
