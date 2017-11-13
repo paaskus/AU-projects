@@ -104,25 +104,16 @@ def validate_hmm(model):
 validate_hmm(hmm_7_state)
 
 def joint_prob(model, x, z):
-    pass
-
-x_short = 'GTTTCCCAGTGTATATCGAGGGATACTACGTGCATAGTAACATCGGCCAA'
-z_short = '33333333333321021021021021021021021021021021021021'
-
-# Your code here ...
-
-def log(x):
-    if x == 0:
-        return float('-inf')
-    return math.log(x)
-
-def joint_prob_log(model, x, z):
+    """
+    Only for debuggin purposes; should not be used in practice since it is numerically unstable.
+    Use joint_prob_log to make perform the same computation in 'log space'.
+    """
     #Consider using numpy arrays for increased precision
     z_indices = translate_path_to_indices(z)
     x_indices = translate_observations_to_indices(x)
 
     #Multiplied with first emission probability as seen in Alexanders slides
-    prob = model.init_probs[z_indices[0]] * model.emission_probs[z_indices[0], x_indices[0]];
+    prob = model.init_probs[z_indices[0]]
 
     for i in range(1, len(z_indices)):
         #This is true according to Alexanders slides
@@ -135,6 +126,35 @@ def joint_prob_log(model, x, z):
         prob *= model.emission_probs[z_indices[i]][x_indices[i]]
 
     print(prob)
+    return prob
+
+x_short = 'GTTTCCCAGTGTATATCGAGGGATACTACGTGCATAGTAACATCGGCCAA'
+z_short = '33333333333321021021021021021021021021021021021021'
+
+def log(x):
+    if x == 0:
+        return float('-inf')
+    return math.log(x)
+
+def joint_prob_log(model, x, z):
+    #Consider using numpy arrays for increased precision
+    z_indices = translate_path_to_indices(z)
+    x_indices = translate_observations_to_indices(x)
+
+    #Multiplied with first emission probability as seen in Alexanders slides
+    prob = log(model.init_probs[z_indices[0]])
+
+    for i in range(1, len(z_indices)):
+        #This is true according to Alexanders slides
+        prob += log(model.trans_probs[z_indices[i-1]][z_indices[i]])
+
+    #The upper bound should not matter since
+    for i in range(0, len(x_indices)):
+        #Reversed ordering as seen in Alexanders slides to: z_indices, x_indices.
+        #Seems right since the row is the hidden states and the columns are the observations (indexing row and the column)
+        prob += log(model.emission_probs[z_indices[i]][x_indices[i]])
+    print(prob)
+    return prob
 
 # Your code here ...
 
