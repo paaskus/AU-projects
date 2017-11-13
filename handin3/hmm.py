@@ -195,7 +195,11 @@ def compute_w(model, x):
     return w
 
 def opt_path_prob(w):
-    pass
+    max_w = 0
+    for j in range(0, len(w)):
+        max_w = max(max_w, w[j][len(w[0]) - 1])
+
+    return max_w
 
 
 #Notes for log transform:
