@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 # representation
 
@@ -25,32 +26,28 @@ emission_probs_7_state = [
     [0.15, 0.30, 0.20, 0.35],
 ]
 
-obs_example = 'GTTTCCCAGTGTATATCGAGGGATACTACGTGCATAGTAACATCGGCCAA'
-
-# lookup
+# Translate between OBSERVATIONS and indices
 def translate_observations_to_indices(obs):
     mapping = {'a': 0, 'c': 1, 'g': 2, 't': 3}
     return [mapping[symbol.lower()] for symbol in obs]
-
-obs_example_trans = translate_observations_to_indices(obs_example)
-
-print(obs_example_trans)
 
 def translate_indices_to_observations(indices):
     mapping = ['a', 'c', 'g', 't']
     return ''.join(mapping[idx] for idx in indices)
 
-print(translate_indices_to_observations(obs_example_trans))
-
+# Translate between PATH and indices
 def translate_path_to_indices(path):
     return list(map(int, path))
 
 def translate_indices_to_path(indices):
     return ''.join([str(i) for i in indices])
 
-path_example = '33333333333321021021021021021021021021021021021021'
+# Translate between STATES and indices
+def translate_states_to_indices(states):
+    mapping = {'n': 0, 'c': 1, 'r': 2}
+    return [mapping[symbol.lower()] for symbol in states]
 
-translate_path_to_indices(path_example)
+path_example = '33333333333321021021021021021021021021021021021021'
 
 class hmm:
     def __init__(self, init_probs, trans_probs, emission_probs):
@@ -99,9 +96,6 @@ def validate_hmm(model):
             if num < 0 or num > 1: return False
 
     return True
-
-
-validate_hmm(hmm_7_state)
 
 def joint_prob(model, x, z):
     """
@@ -207,6 +201,7 @@ def compute_w(model, x):
 
 def backtrack_log(w, x, model):
     n = len(x)
+    k = len(w[0])
 
     z = make_table(1, n) #Make a table with 1 row and N columns - one for each hidden state
     z[n] = opt_path_prob
@@ -218,8 +213,7 @@ def backtrack_log(w, x, model):
         zn = float("-inf")
         for j in range(0, k):
             #I am not sure about the last term (z[n+1])
-            zn = max(zn, log(model.emission_probs[z[i + 1]][x[i + 1]]) + w[j][i] + log(model.trans_probs[j][z[n]])
-
+            zn = max(zn, log(model.emission_probs[z[i + 1]][x[i + 1]]) + w[j][i] + log(model.trans_probs[j][z[n]]))
         z[i] = zn
 
 #This might be wrong. See the pseudo code on slides for lecture 3
@@ -231,15 +225,24 @@ def opt_path_prob(w):
     return max_w
 
 def count_transitions_and_emissions(K, D, x, z):
-    trained_trans_probs = make_table(K, K)
-    trained_emission_probs = make(K, D)
-
-
     """
     Returns a KxK matrix and a KxD matrix containing counts cf. above
     """
-    pass
+    # we assume that we have seen each transition once, and each observation once
+    counted_trans = np.ones(shape=(K, K))
+    counted_emissions = np.ones(shape=(K, D))
+    x, z = np.array(x), np.array(z)
+    for i in range(len(z)-1):
+        counted_trans[z[i]][z[i+1]] += 1
+    for i in range(len(x)):
+        counted_emissions[z[i]][x[i]] += 1
+    return counted_trans, counted_emissions
 
+def training_by_counting(K, D, x, z):
+    counted_trans, counted_emissions = count_transitions_and_emissions(K, D, x, z)
+    trained_trans_probs = (counted_trans.T / np.sum(counted_trans, axis=1)).T
+    trained_emission_probs = (counted_emissions.T / np.sum(counted_emissions, axis=1)).T
+    return trained_trans_probs, trained_emission_probs
 
 
 #Notes for log transform:
@@ -258,8 +261,41 @@ def count_transitions_and_emissions(K, D, x, z):
 #Ignore posterior decoding in the practical exercises for week 9
 #Ignore everything past "training by counting" in the practical exercises for week 10 (we need training by counting, however)
 
-# Test implementation
-w = compute_w(hmm_7_state, translate_observations_to_indices(x_short))
-z_viterbi_log = backtrack_log(w)
+def read_fasta_file(filename):
+    """
+    Reads the given FASTA file f and returns a dictionary of sequences.
 
-print(z_viterbi_log)
+    Lines starting with ';' in the FASTA file are ignored.
+    """
+    sequences_lines = {}
+    current_sequence_lines = None
+    with open(filename) as fp:
+        for line in fp:
+            line = line.strip()
+            if line.startswith(';') or not line:
+                continue
+            if line.startswith('>'):
+                sequence_name = line.lstrip('>')
+                current_sequence_lines = []
+                sequences_lines[sequence_name] = current_sequence_lines
+            else:
+                if current_sequence_lines is not None:
+                    current_sequence_lines.append(line)
+    sequences = {}
+    for name, lines in sequences_lines.items():
+        sequences[name] = ''.join(lines)
+    return sequences
+
+if __name__ == "__main__":
+    obs_dict = read_fasta_file('data/genome1.fa')
+    obs = obs_dict[list(obs_dict.keys())[0]]
+    obs_indices = translate_observations_to_indices(obs)
+
+    states_dict = read_fasta_file('data/true-ann1.fa')
+    states = states_dict[list(states_dict.keys())[0]]
+    states_indices = translate_states_to_indices(states)
+
+    trained_trans_probs, trained_emission_probs = training_by_counting(3, 4, obs_indices, states_indices)
+    print(trained_trans_probs)
+    print("\n")
+    print(trained_emission_probs)
