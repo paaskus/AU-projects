@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import pandas as pd
 
 # representation
 
@@ -169,21 +170,27 @@ def make_table(m, n):
     """Make a table with `m` rows and `n` columns filled with zeros."""
     return [[0] * n for _ in range(m)]
 
+#Assume x is already indiced
 def compute_w(model, x):
     k = len(model.init_probs)
     n = len(x)
 
-    x_indices = translate_observations_to_indices(x) # I am not sure we need this
+    #x_indices = translate_observations_to_indices(x) # I am not sure we need this
 
     w = make_table(k, n)
 
     # Base case: fill out w[i][0] for i = 0..k-1
-    for i in range(0, (k - 1)):
+    for i in range(0, k):
         #Perhaps we need to use x_indices and perhaps we need to use i
-        w[i][0] = log(model.init_probs[i]) + log(model.emission_probs[i][x_indices[0]])
+        #z1 = p(z1) + log p(z1 | x1)
+        #z2 = p(z2) + log p(z2 | x1)
+        #z3 = p(z3) + log p(z3 | x1)
+        #z4 = p(z4) + log p(z4 | x1)
+
+        w[i][0] = log(model.init_probs[i]) + log(model.emission_probs[i][x[0]])
 
     # Inductive case: fill out w[j][i] for i = 0..n-1, j = 0..k-1
-    for i in range(1, (n - 1)):
+    for i in range(1, n):
         # Find max in column
         max_w = 0
         previous_state = 0
@@ -194,27 +201,48 @@ def compute_w(model, x):
                 #This has already been logged
                 max_w = w[j][i - 1]
 
-        for j in range(0, (k - 1)):
-            w[j][i] = max_w + log(model.trans_probs[previous_state][j]) + log(model.emission_probs[j][x_indices[i]])
+        for j in range(0, k):
+            w[j][i] = max_w + log(model.trans_probs[previous_state][j]) + log(model.emission_probs[j][x[i]])
 
     return w
 
 def backtrack_log(w, x, model):
     n = len(x)
-    k = len(w[0])
+    k = len(w)
 
-    z = make_table(1, n) #Make a table with 1 row and N columns - one for each hidden state
-    z[n] = opt_path_prob
+    z = np.ones((n,), dtype=np.int) #Make a table with 1 row and N columns - one for each hidden state
+
+    #Find a better way to get the last column
+    z[n - 1] = np.argmax(np.take(w, -1, axis=1))
 
     #Make a backwards loop since we are backtracking
     #i corresponds to n on the slides and j to k (consider a name change)
-    for i in range((n - 1), 0, -1):
+    for i in range((n - 2), (n - 12), -1):
         #This could have been done much more efficient with numpy arrays
-        zn = float("-inf")
+        # zn = float("-inf")
+        candidates = np.array(k)
         for j in range(0, k):
             #I am not sure about the last term (z[n+1])
-            zn = max(zn, log(model.emission_probs[z[i + 1]][x[i + 1]]) + w[j][i] + log(model.trans_probs[j][z[n]]))
-        z[i] = zn
+
+            firstPart = log(model.emission_probs[z[i + 1]][x[i + 1]])
+            print(f"Loop with i value: {i} and j value: {j}")
+            print(firstPart)
+
+            secondPart = w[j][i]
+            print(secondPart)
+
+            thirdPart = log(model.trans_probs[j][z[n - 1]])
+            print(thirdPart)
+
+            zn = firstPart + secondPart + thirdPart
+            print(zn)
+
+            np.append(candidates, zn)
+
+        z[i] = np.argmax(candidates)
+        print(f"Printing z[{i}] which is {z[i]}")
+
+    return z
 
 #This might be wrong. See the pseudo code on slides for lecture 3
 def opt_path_prob(w):
@@ -240,9 +268,18 @@ def count_transitions_and_emissions(K, D, x, z):
 
 def training_by_counting(K, D, x, z):
     counted_trans, counted_emissions = count_transitions_and_emissions(K, D, x, z)
+
     trained_trans_probs = (counted_trans.T / np.sum(counted_trans, axis=1)).T
     trained_emission_probs = (counted_emissions.T / np.sum(counted_emissions, axis=1)).T
-    return trained_trans_probs, trained_emission_probs
+
+    trained_init_probs = np.ones(K)
+    trained_init_probs[z[0]] += 1
+
+    trained_init_probs = (trained_init_probs / np.sum(trained_init_probs))
+
+    model = hmm(trained_init_probs, trained_trans_probs, trained_emission_probs)
+
+    return model
 
 
 #Notes for log transform:
@@ -295,7 +332,22 @@ if __name__ == "__main__":
     states = states_dict[list(states_dict.keys())[0]]
     states_indices = translate_states_to_indices(states)
 
-    trained_trans_probs, trained_emission_probs = training_by_counting(3, 4, obs_indices, states_indices)
-    print(trained_trans_probs)
+    #Test of training by counting
+    model = training_by_counting(3, 4, obs_indices, states_indices)
+    print(model.trans_probs)
     print("\n")
-    print(trained_emission_probs)
+    print(model.emission_probs)
+    print("\n")
+    print(model.init_probs)
+
+    w = compute_w(model, obs_indices)
+    #print(np.array(w).T[:240])
+    #print(np.array(w).T[:-20])
+    backtracked = backtrack_log(w, obs_indices, model)
+
+    print(backtracked[:20])
+
+    #df = pd.DataFrame(translate_indices_to_path(backtracked), columns=['states'])
+    #df.to_csv("Test.csv")
+
+    #trained_model = hmm()
