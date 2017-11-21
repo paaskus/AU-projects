@@ -192,9 +192,9 @@ def compute_w(model, x):
     # Inductive case: fill out w[j][i] for i = 0..n-1, j = 0..k-1
     for i in range(1, n):
         # Find max in column
-        max_w = 0
+        max_w = float("-inf")
         previous_state = 0
-        for j in range(0, (k - 1)):
+        for j in range(0, k):
             if(max(max_w, w[j][i - 1]) > max_w):
                 previous_state = j
 
@@ -217,7 +217,7 @@ def backtrack_log(w, x, model):
 
     #Make a backwards loop since we are backtracking
     #i corresponds to n on the slides and j to k (consider a name change)
-    for i in range((n - 2), (n - 12), -1):
+    for i in range((n - 2), -1, -1):
         #This could have been done much more efficient with numpy arrays
         # zn = float("-inf")
         candidates = np.array(k)
@@ -225,22 +225,22 @@ def backtrack_log(w, x, model):
             #I am not sure about the last term (z[n+1])
 
             firstPart = log(model.emission_probs[z[i + 1]][x[i + 1]])
-            print(f"Loop with i value: {i} and j value: {j}")
-            print(firstPart)
+            #print(f"Loop with i value: {i} and j value: {j}")
+            #print(firstPart)
 
             secondPart = w[j][i]
-            print(secondPart)
+            #print(secondPart)
 
-            thirdPart = log(model.trans_probs[j][z[n - 1]])
-            print(thirdPart)
+            thirdPart = log(model.trans_probs[j][z[i + 1]])
+            #print(thirdPart)
 
             zn = firstPart + secondPart + thirdPart
-            print(zn)
+            #print(zn)
 
             np.append(candidates, zn)
 
         z[i] = np.argmax(candidates)
-        print(f"Printing z[{i}] which is {z[i]}")
+        #print(f"Printing z[{i}] which is {z[i]}")
 
     return z
 
@@ -341,11 +341,15 @@ if __name__ == "__main__":
     print(model.init_probs)
 
     w = compute_w(model, obs_indices)
+    print(w)
     #print(np.array(w).T[:240])
     #print(np.array(w).T[:-20])
     backtracked = backtrack_log(w, obs_indices, model)
 
-    print(backtracked[:20])
+    print((backtracked == 0).sum())
+    print((backtracked == 1).sum())
+    print((backtracked == 2).sum())
+
 
     #df = pd.DataFrame(translate_indices_to_path(backtracked), columns=['states'])
     #df.to_csv("Test.csv")
