@@ -190,21 +190,34 @@ def compute_w(model, x):
         w[i][0] = log(model.init_probs[i]) + log(model.emission_probs[i][x[0]])
 
     # Inductive case: fill out w[j][i] for i = 0..n-1, j = 0..k-1
-    for i in range(1, n):
+    for nn in range(1, n):
         # Find max in column
-        max_w = float("-inf")
         previous_state = 0
-        for j in range(0, k):
-            if(max(max_w, w[j][i - 1]) > max_w):
-                previous_state = j
-
-                #This has already been logged
-                max_w = w[j][i - 1]
-
-        for j in range(0, k):
-            w[j][i] = max_w + log(model.trans_probs[previous_state][j]) + log(model.emission_probs[j][x[i]])
+        for kk in range(0, k):
+            w[kk][nn] = float("-inf")
+            for j in range(0, k):
+               # print(f'n = {n}, k = {kk}, j = {j}, x(n) = {x[n]}')
+                p1 = log(model.emission_probs[kk][x[nn]])
+                p2 =  w[j][nn-1] 
+                p3  = log(model.trans_probs[j][kk])
+                w[kk][nn] = max(w[kk][nn], p1+ p2 + p3)
+        #print(f'collumn {nn} has sum {w[0][nn]+w[1][nn]+w[2][nn]} w0 = {w[0][nn]} w1 = {w[1][nn]} w2 = {w[2][nn]}')
 
     return w
+            
+        
+        
+        
+    #        if(max(max_w, w[j][i - 1]) > max_w):
+     #           previous_state = j
+#
+                #This has already been logged
+    #            max_w = w[j][i - 1]
+#
+ #       for j in range(0, k):
+  #          w[j][i] = max_w + log(model.trans_probs[previous_state][j]) + log(model.emission_probs[j][x[i]])
+
+  #  return w
 
 def backtrack_log(w, x, model):
     n = len(x)
@@ -330,8 +343,15 @@ if __name__ == "__main__":
 
     states_dict = read_fasta_file('data/true-ann1.fa')
     states = states_dict[list(states_dict.keys())[0]]
-    states_indices = translate_states_to_indices(states)
-
+    states_indices = np.array(translate_states_to_indices(states))
+    
+    
+    
+    print((states_indices == 0).sum())
+    print((states_indices == 1).sum())
+    print((states_indices == 2).sum())
+    
+    
     #Test of training by counting
     model = training_by_counting(3, 4, obs_indices, states_indices)
     print(model.trans_probs)
@@ -341,7 +361,7 @@ if __name__ == "__main__":
     print(model.init_probs)
 
     w = compute_w(model, obs_indices)
-    print(w)
+    #print(w)
     #print(np.array(w).T[:240])
     #print(np.array(w).T[:-20])
     backtracked = backtrack_log(w, obs_indices, model)
@@ -350,6 +370,13 @@ if __name__ == "__main__":
     print((backtracked == 1).sum())
     print((backtracked == 2).sum())
 
+    f= open('testoutput.fsa','w+')
+    np.savetxt('testoutput.fsa', backtracked)
+    f.close
+    
+    f= open('w.fsa','w+')
+    np.savetxt('w.fsa', w)
+    f.close
 
     #df = pd.DataFrame(translate_indices_to_path(backtracked), columns=['states'])
     #df.to_csv("Test.csv")
