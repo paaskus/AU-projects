@@ -27,6 +27,77 @@ emission_probs_7_state = [
     [0.15, 0.30, 0.20, 0.35],
 ]
 
+init_probs_31_states = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+trans_probs_31_states = [
+    [0.2, 0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2, 0, 0, 0.2, 0, 0, 0.2, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0.25, 0, 0, 0.25, 0, 0, 0.25, 0, 0, 0.25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0.5, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+]
+
+emission_probs_31_states = [
+    #   A     C     G     T
+    [0.25, 0.25, 0.25, 0.25],
+    [1.00, 0.00, 0.00, 0.00],
+    [0.00, 0.00, 0.00, 1.00],
+    [0.00, 0.00, 1.00, 0.00],
+    [0.25, 0.25, 0.25, 0.25],
+    [0.25, 0.25, 0.25, 0.25],
+    [0.25, 0.25, 0.25, 0.25],
+    [0.00, 0.00, 0.00, 1.00],
+    [1.00, 0.00, 0.00, 0.00],
+    [1.00, 0.00, 0.00, 0.00],
+    [0.00, 0.00, 0.00, 1.00],
+    [1.00, 0.00, 0.00, 0.00],
+    [0.00, 0.00, 1.00, 0.00],
+    [0.00, 0.00, 0.00, 1.00],
+    [0.00, 0.00, 1.00, 0.00],
+    [1.00, 0.00, 0.00, 0.00],
+    [0.00, 0.00, 0.00, 1.00],
+    [0.00, 0.00, 0.00, 1.00],
+    [1.00, 0.00, 0.00, 0.00],
+    [0.00, 1.00, 0.00, 0.00],
+    [0.00, 0.00, 0.00, 1.00],
+    [1.00, 0.00, 0.00, 0.00],
+    [0.00, 0.00, 0.00, 1.00],
+    [0.00, 1.00, 0.00, 0.00],
+    [1.00, 0.00, 0.00, 0.00],
+    [0.25, 0.25, 0.25, 0.25],
+    [0.25, 0.25, 0.25, 0.25],
+    [0.25, 0.25, 0.25, 0.25],
+    [0.00, 1.00, 0.00, 0.00],
+    [1.00, 0.00, 0.00, 0.00],
+    [0.00, 0.00, 0.00, 1.00],
+]
+
 # Translate between OBSERVATIONS and indices
 def translate_observations_to_indices(obs):
     mapping = {'a': 0, 'c': 1, 'g': 2, 't': 3}
@@ -47,6 +118,26 @@ def translate_indices_to_path(indices):
 def translate_states_to_indices(states):
     mapping = {'n': 0, 'c': 1, 'r': 2}
     return [mapping[symbol.lower()] for symbol in states]
+
+#Used with the 31 state model
+#def translate_states_to_indices(states):
+    #The end values are not includes
+    #mapping = {'n': 0, 'c': np.arange(1, 16), 'r': np.arange(16, 31)}
+    #return [mapping[symbol.lower()] for symbol in states]
+
+
+def translate_states_to_indices(states):
+    def index(state):
+        if state == 0: return 'n'
+        if state in range(1, 16): return 'c'
+        if state in range(16, 31): return 'r'
+
+    return [index(x) for x in states]
+
+
+#def translate_indices_to_path(indices):
+    #mapping = {0: 'n', np.arange(1, 16): 'c', np.arange(16, 31): 'r'}
+
 
 path_example = '33333333333321021021021021021021021021021021021021'
 
@@ -198,16 +289,16 @@ def compute_w(model, x):
             for j in range(0, k):
                # print(f'n = {n}, k = {kk}, j = {j}, x(n) = {x[n]}')
                 p1 = log(model.emission_probs[kk][x[nn]])
-                p2 =  w[j][nn-1] 
+                p2 =  w[j][nn-1]
                 p3  = log(model.trans_probs[j][kk])
                 w[kk][nn] = max(w[kk][nn], p1+ p2 + p3)
         #print(f'collumn {nn} has sum {w[0][nn]+w[1][nn]+w[2][nn]} w0 = {w[0][nn]} w1 = {w[1][nn]} w2 = {w[2][nn]}')
 
     return w
-            
-        
-        
-        
+
+
+
+
     #        if(max(max_w, w[j][i - 1]) > max_w):
      #           previous_state = j
 #
@@ -344,36 +435,59 @@ if __name__ == "__main__":
     states_dict = read_fasta_file('data/true-ann1.fa')
     states = states_dict[list(states_dict.keys())[0]]
     states_indices = np.array(translate_states_to_indices(states))
-    
-    
-    
-    print((states_indices == 0).sum())
-    print((states_indices == 1).sum())
-    print((states_indices == 2).sum())
-    
-    
-    #Test of training by counting
-    model = training_by_counting(3, 4, obs_indices, states_indices)
-    print(model.trans_probs)
-    print("\n")
-    print(model.emission_probs)
-    print("\n")
-    print(model.init_probs)
 
-    w = compute_w(model, obs_indices)
-    #print(w)
+
+    #print((states_indices == 0).sum())
+    #print((states_indices == 1).sum())
+    #print((states_indices == 2).sum())
+
+
+    hmm_31_state_model = hmm(init_probs_31_states, trans_probs_31_states, emission_probs_31_states)
+    w = compute_w(hmm_31_state_model, translate_observations_to_indices(x_short))
+    print(w)
     #print(np.array(w).T[:240])
     #print(np.array(w).T[:-20])
-    backtracked = backtrack_log(w, obs_indices, model)
+    backtracked = backtrack_log(w, translate_observations_to_indices(x_short), hmm_31_state_model)
 
+    #Do this better
     print((backtracked == 0).sum())
     print((backtracked == 1).sum())
     print((backtracked == 2).sum())
+    print((backtracked == 3).sum())
+    print((backtracked == 4).sum())
+    print((backtracked == 5).sum())
+    print((backtracked == 6).sum())
+    print((backtracked == 7).sum())
+    print((backtracked == 8).sum())
+    print((backtracked == 9).sum())
+    print((backtracked == 10).sum())
+    print((backtracked == 11).sum())
+    print((backtracked == 12).sum())
+    print((backtracked == 13).sum())
+    print((backtracked == 14).sum())
+    print((backtracked == 15).sum())
+    print((backtracked == 16).sum())
+    print((backtracked == 17).sum())
+    print((backtracked == 18).sum())
+    print((backtracked == 19).sum())
+    print((backtracked == 20).sum())
+    print((backtracked == 21).sum())
+    print((backtracked == 22).sum())
+    print((backtracked == 23).sum())
+    print((backtracked == 24).sum())
+    print((backtracked == 25).sum())
+    print((backtracked == 26).sum())
+    print((backtracked == 27).sum())
+    print((backtracked == 28).sum())
+    print((backtracked == 29).sum())
+    print((backtracked == 30).sum())
+    print((backtracked == 31).sum())
+
 
     f= open('testoutput.fsa','w+')
     np.savetxt('testoutput.fsa', backtracked)
     f.close
-    
+
     f= open('w.fsa','w+')
     np.savetxt('w.fsa', w)
     f.close
